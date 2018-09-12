@@ -32,6 +32,25 @@ public class Movie extends DateAudit {
     private List<MovieReview> movieReviews = new ArrayList<>();
     private List<MovieCelebrity> movieCelebrities = new ArrayList<>();
 
+    public Movie() {}
+
+    public Movie(Long id, String name, Date releaseDate, Time runtime, Float rating, String storyline,
+                 String poster, String rated, List<Genre> genres, List<MovieMedia> movieMedia,
+                 List<MovieReview> movieReviews, List<MovieCelebrity> movieCelebrities) {
+        this.id = id;
+        this.name = name;
+        this.releaseDate = releaseDate;
+        this.runtime = runtime;
+        this.rating = rating;
+        this.storyline = storyline;
+        this.poster = poster;
+        this.rated = rated;
+        this.genres = genres;
+        this.movieMedia = movieMedia;
+        this.movieReviews = movieReviews;
+        this.movieCelebrities = movieCelebrities;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long getId() {

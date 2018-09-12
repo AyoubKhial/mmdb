@@ -44,6 +44,15 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+        <!-- Using object mapping library to automatically maps objects to each other ( Model -> DTO ).
+        It uses a convention based approach while providing a simple refactoring safe API for handling specific use cases.
+        -->
+        <dependency>
+            <groupId>org.modelmapper</groupId>
+            <artifactId>modelmapper</artifactId>
+            <version>2.1.1</version>
+        </dependency>
 	</dependencies>
 
 	<build>

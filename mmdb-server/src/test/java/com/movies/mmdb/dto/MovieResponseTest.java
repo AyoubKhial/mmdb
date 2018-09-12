@@ -1,9 +1,9 @@
 package com.movies.mmdb.dto;
 
+import com.movies.mmdb.ErrorCollectorRule;
 import com.movies.mmdb.model.CelebrityRole;
 import com.movies.mmdb.model.MediaType;
 import org.junit.*;
-import org.junit.rules.ErrorCollector;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,12 +12,16 @@ import static org.hamcrest.Matchers.hasSize;
 
 /**
  * A test class to test <code>MovieResponse</code> class
+ * <p>
+ * Extending <code>ErrorCollectorRule</code> to make sure we can use multiple assertions in single method and get
+ * all the failure assertions
  * @author Ayoub Khial
  * @version 1.0
+ * @see ErrorCollectorRule
  * @see MovieResponse
  * @since 1.0
  */
-public class MovieResponseTest {
+public class MovieResponseTest extends ErrorCollectorRule {
 
     private MovieResponse movieResponse;
 
@@ -26,12 +30,6 @@ public class MovieResponseTest {
         // Initialize the movieResponse Object
         this.movieResponse = new MovieResponse();
     }
-    /**
-     * Enable a test not to stop on an error by doing all assertions and listing the failed ones at the end.
-     * the <code>@Rule</code> annotation offers a generic way to add extended features on a test method
-     */
-    @Rule
-    public ErrorCollector collector = new ErrorCollector();
 
     /**
      * A test case for <code>setCelebrity</code> Method
