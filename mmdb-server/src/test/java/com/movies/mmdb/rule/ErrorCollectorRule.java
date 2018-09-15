@@ -14,6 +14,7 @@ public abstract class ErrorCollectorRule {
     /**
      * Enable a test not to stop on an error by doing all assertions and listing the failed ones at the end.
      * the <code>@Rule</code> annotation offers a generic way to add extended features on a test method
+     * @see ErrorCollector
      */
     @Rule
     public ErrorCollector errorCollector = new ErrorCollector();
