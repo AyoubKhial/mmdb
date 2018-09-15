@@ -2,7 +2,7 @@ package com.movies.mmdb.rule;
 
 import org.junit.Rule;
 import org.junit.rules.ErrorCollector;
-import com.movies.mmdb.dto.UserResponse;
+
 /**
  * This class is extended by test classes which have at least one method with multiple assertions.
  * @author Ayoub Khial
