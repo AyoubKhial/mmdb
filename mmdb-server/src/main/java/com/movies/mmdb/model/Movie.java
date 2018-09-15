@@ -8,6 +8,7 @@ import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * <code>Movie</code> class is a domain model class that contains the information of a single Movie entry
@@ -17,7 +18,7 @@ import java.util.List;
  * @since 1.0
  */
 @Entity
-public class Movie extends DateAudit {
+public class Movie extends DateAudit  {
 
     private Long id;
     private String name;
@@ -34,9 +35,7 @@ public class Movie extends DateAudit {
 
     public Movie() {}
 
-    public Movie(Long id, String name, Date releaseDate, Time runtime, Float rating, String storyline,
-                 String poster, String rated, List<Genre> genres, List<MovieMedia> movieMedia,
-                 List<MovieReview> movieReviews, List<MovieCelebrity> movieCelebrities) {
+    public Movie(Long id, String name, Date releaseDate, Time runtime, Float rating, String storyline, String poster, String rated) {
         this.id = id;
         this.name = name;
         this.releaseDate = releaseDate;
@@ -45,10 +44,21 @@ public class Movie extends DateAudit {
         this.storyline = storyline;
         this.poster = poster;
         this.rated = rated;
-        this.genres = genres;
-        this.movieMedia = movieMedia;
-        this.movieReviews = movieReviews;
-        this.movieCelebrities = movieCelebrities;
+    }
+
+    public Movie(Movie movie) {
+        this.id = movie.id;
+        this.name = movie.name;
+        this.releaseDate = movie.releaseDate;
+        this.runtime = movie.runtime;
+        this.rating = movie.rating;
+        this.storyline = movie.storyline;
+        this.poster = movie.poster;
+        this.rated = movie.rated;
+        this.genres = movie.genres;
+        this.movieMedia = movie.movieMedia;
+        this.movieReviews = movie.movieReviews;
+        this.movieCelebrities = movie.movieCelebrities;
     }
 
     @Id
@@ -163,5 +173,29 @@ public class Movie extends DateAudit {
 
     public void setMovieCelebrities(List<MovieCelebrity> movieCelebrities) {
         this.movieCelebrities = movieCelebrities;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Movie movie = (Movie) o;
+        return Objects.equals(id, movie.id) &&
+                Objects.equals(name, movie.name) &&
+                Objects.equals(releaseDate, movie.releaseDate) &&
+                Objects.equals(runtime, movie.runtime) &&
+                Objects.equals(rating, movie.rating) &&
+                Objects.equals(storyline, movie.storyline) &&
+                Objects.equals(poster, movie.poster) &&
+                Objects.equals(rated, movie.rated) &&
+                Objects.equals(genres, movie.genres) &&
+                Objects.equals(movieMedia, movie.movieMedia) &&
+                Objects.equals(movieReviews, movie.movieReviews) &&
+                Objects.equals(movieCelebrities, movie.movieCelebrities);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, releaseDate, runtime, rating, storyline, poster, rated, genres, movieMedia, movieReviews, movieCelebrities);
     }
 }

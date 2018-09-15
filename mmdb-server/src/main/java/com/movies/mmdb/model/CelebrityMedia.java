@@ -5,6 +5,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 /**
  * <code>CelebrityMedia</code> class is a domain model class that contains the information of a single CelebrityMedia entry
@@ -21,6 +22,15 @@ public class CelebrityMedia extends DateAudit {
     private String url;
     private MediaType type;
     private Celebrity celebrity;
+
+    public CelebrityMedia() {}
+
+    public CelebrityMedia(Long id, String url, MediaType type, Celebrity celebrity) {
+        this.id = id;
+        this.url = url;
+        this.type = type;
+        this.celebrity = celebrity;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -60,5 +70,21 @@ public class CelebrityMedia extends DateAudit {
 
     public void setCelebrity(Celebrity celebrity) {
         this.celebrity = celebrity;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CelebrityMedia that = (CelebrityMedia) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(url, that.url) &&
+                type == that.type &&
+                Objects.equals(celebrity, that.celebrity);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, url, type, celebrity);
     }
 }

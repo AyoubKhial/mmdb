@@ -3,6 +3,7 @@ package com.movies.mmdb.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * <code>CelebrityResponse</code> is a DTO class which have the all the
@@ -66,5 +67,22 @@ public class CelebrityResponse {
 
     public void setBiography(String biography) {
         this.biography = biography;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CelebrityResponse that = (CelebrityResponse) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(name, that.name) &&
+                Objects.equals(picture, that.picture) &&
+                Objects.equals(dateOfBirth, that.dateOfBirth) &&
+                Objects.equals(biography, that.biography);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, picture, dateOfBirth, biography);
     }
 }

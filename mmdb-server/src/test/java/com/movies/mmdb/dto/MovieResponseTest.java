@@ -1,6 +1,6 @@
 package com.movies.mmdb.dto;
 
-import com.movies.mmdb.ErrorCollectorRule;
+import com.movies.mmdb.rule.ErrorCollectorRule;
 import com.movies.mmdb.model.CelebrityRole;
 import com.movies.mmdb.model.MediaType;
 import org.junit.*;
@@ -54,9 +54,9 @@ public class MovieResponseTest extends ErrorCollectorRule {
         );
         // Add the list to the current movieResponse object
         this.movieResponse.setCelebrities(movieCelebrityResponses);
-        this.collector.checkThat("The size of cast list should be 1.", this.movieResponse.getCast(), hasSize(1));
-        this.collector.checkThat("The size of directors list should be 1.", this.movieResponse.getDirectors(), hasSize(1));
-        this.collector.checkThat("The size of writers list should be 1.", this.movieResponse.getWriters(), hasSize(1));
+        this.errorCollector.checkThat("The size of cast list should be 1.", this.movieResponse.getCast(), hasSize(1));
+        this.errorCollector.checkThat("The size of directors list should be 1.", this.movieResponse.getDirectors(), hasSize(1));
+        this.errorCollector.checkThat("The size of writers list should be 1.", this.movieResponse.getWriters(), hasSize(1));
     }
 
     /**
@@ -79,8 +79,8 @@ public class MovieResponseTest extends ErrorCollectorRule {
         );
         // Add the list to the current movieResponse object
         this.movieResponse.setMovieMedia(movieMediaResponses);
-        this.collector.checkThat("The size of photo list should be 1.", this.movieResponse.getPhotos(), hasSize(1));
-        this.collector.checkThat("The size of video list should be 1.", this.movieResponse.getVideos(), hasSize(1));
+        this.errorCollector.checkThat("The size of photo list should be 1.", this.movieResponse.getPhotos(), hasSize(1));
+        this.errorCollector.checkThat("The size of video list should be 1.", this.movieResponse.getVideos(), hasSize(1));
     }
 
     @After

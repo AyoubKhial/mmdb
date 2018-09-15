@@ -1,5 +1,7 @@
 package com.movies.mmdb.dto;
 
+import java.util.Objects;
+
 /**
  * <code>GenreResponse</code> is a DTO class which have the all the
  * <code>{@link com.movies.mmdb.model.Genre}</code> fields we want to expose in the view.
@@ -23,5 +25,18 @@ public class GenreResponse {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GenreResponse that = (GenreResponse) o;
+        return Objects.equals(name, that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
     }
 }

@@ -4,6 +4,7 @@ import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -18,6 +19,13 @@ public class Genre {
     private Long id;
     private String name;
     private Set<Movie> movies = new HashSet<>();
+
+    public Genre() {}
+
+    public Genre(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,5 +54,20 @@ public class Genre {
 
     public void setMovies(Set<Movie> movies) {
         this.movies = movies;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Genre genre = (Genre) o;
+        return Objects.equals(id, genre.id) &&
+                Objects.equals(name, genre.name) &&
+                Objects.equals(movies, genre.movies);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, movies);
     }
 }

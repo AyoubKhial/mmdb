@@ -5,6 +5,7 @@ import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -24,6 +25,18 @@ public class User extends DateAudit {
     private String password;
     private String picture;
     private Set<Role> roles = new HashSet<>();
+
+    public User() {}
+
+    public User(Long id, String username, String email, String firstName, String lastName, String password, String picture) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.password = password;
+        this.picture = picture;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -101,5 +114,25 @@ public class User extends DateAudit {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id) &&
+                Objects.equals(username, user.username) &&
+                Objects.equals(email, user.email) &&
+                Objects.equals(firstName, user.firstName) &&
+                Objects.equals(lastName, user.lastName) &&
+                Objects.equals(password, user.password) &&
+                Objects.equals(picture, user.picture) &&
+                Objects.equals(roles, user.roles);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, username, email, firstName, lastName, password, picture, roles);
     }
 }

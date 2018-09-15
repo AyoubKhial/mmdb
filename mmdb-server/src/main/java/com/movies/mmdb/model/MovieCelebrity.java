@@ -6,6 +6,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 /**
  * <code>MovieCelebrity</code> class is a domain model class that contains the information of a single MovieCelebrity entry
@@ -27,6 +28,16 @@ public class MovieCelebrity extends DateAudit {
     private String characterName;
     private Movie movie;
     private Celebrity celebrity;
+
+    public MovieCelebrity(){}
+
+    public MovieCelebrity(Long id, Boolean credited, CelebrityRole role, String characterName, Celebrity celebrity) {
+        this.id = id;
+        this.credited = credited;
+        this.role = role;
+        this.characterName = characterName;
+        this.celebrity = celebrity;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -87,5 +98,23 @@ public class MovieCelebrity extends DateAudit {
 
     public void setCelebrity(Celebrity celebrity) {
         this.celebrity = celebrity;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MovieCelebrity that = (MovieCelebrity) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(credited, that.credited) &&
+                role == that.role &&
+                Objects.equals(characterName, that.characterName) &&
+                Objects.equals(movie, that.movie) &&
+                Objects.equals(celebrity, that.celebrity);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, credited, role, characterName, movie, celebrity);
     }
 }

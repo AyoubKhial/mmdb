@@ -10,6 +10,7 @@ import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -218,5 +219,35 @@ public class MovieResponse {
 
     public void setDirectors(List<MovieCelebrityResponse> directors) {
         this.directors = directors;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MovieResponse that = (MovieResponse) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(name, that.name) &&
+                Objects.equals(releaseDate, that.releaseDate) &&
+                Objects.equals(runtime, that.runtime) &&
+                Objects.equals(rating, that.rating) &&
+                Objects.equals(storyline, that.storyline) &&
+                Objects.equals(poster, that.poster) &&
+                Objects.equals(rated, that.rated) &&
+                Objects.equals(createdAt, that.createdAt) &&
+                Objects.equals(genres, that.genres) &&
+                Objects.equals(movieMedia, that.movieMedia) &&
+                Objects.equals(videos, that.videos) &&
+                Objects.equals(photos, that.photos) &&
+                Objects.equals(reviews, that.reviews) &&
+                Objects.equals(celebrities, that.celebrities) &&
+                Objects.equals(cast, that.cast) &&
+                Objects.equals(writers, that.writers) &&
+                Objects.equals(directors, that.directors);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, releaseDate, runtime, rating, storyline, poster, rated, createdAt, genres, movieMedia, videos, photos, reviews, celebrities, cast, writers, directors);
     }
 }

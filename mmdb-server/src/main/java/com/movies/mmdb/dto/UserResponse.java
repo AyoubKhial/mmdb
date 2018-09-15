@@ -2,6 +2,8 @@ package com.movies.mmdb.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import java.util.Objects;
+
 /**
  * <code>UserResponse</code> is a DTO class which have the all the
  * <code>{@link com.movies.mmdb.model.User}</code> fields we want to expose in the view.
@@ -62,5 +64,22 @@ public class UserResponse {
 
     public void setPicture(String picture) {
         this.picture = picture;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserResponse that = (UserResponse) o;
+        return Objects.equals(username, that.username) &&
+                Objects.equals(email, that.email) &&
+                Objects.equals(firstName, that.firstName) &&
+                Objects.equals(lastName, that.lastName) &&
+                Objects.equals(picture, that.picture);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(username, email, firstName, lastName, picture);
     }
 }

@@ -5,6 +5,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 /**
  * <code>MovieMedia</code> class is a domain model class that contains the information of a single MovieMedia entry
@@ -21,6 +22,14 @@ public class MovieMedia extends DateAudit {
     private String url;
     private MediaType type;
     private Movie movie;
+
+    public MovieMedia() {}
+
+    public MovieMedia(Long id, String url, MediaType type) {
+        this.id = id;
+        this.url = url;
+        this.type = type;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -60,5 +69,21 @@ public class MovieMedia extends DateAudit {
 
     public void setMovie(Movie movie) {
         this.movie = movie;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MovieMedia that = (MovieMedia) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(url, that.url) &&
+                type == that.type &&
+                Objects.equals(movie, that.movie);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, url, type, movie);
     }
 }

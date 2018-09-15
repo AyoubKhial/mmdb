@@ -1,8 +1,8 @@
-package com.movies.mmdb;
+package com.movies.mmdb.rule;
 
 import org.junit.Rule;
 import org.junit.rules.ErrorCollector;
-
+import com.movies.mmdb.dto.UserResponse;
 /**
  * This class is extended by test classes which have at least one method with multiple assertions.
  * @author Ayoub Khial
@@ -16,5 +16,5 @@ public abstract class ErrorCollectorRule {
      * the <code>@Rule</code> annotation offers a generic way to add extended features on a test method
      */
     @Rule
-    public ErrorCollector collector = new ErrorCollector();
+    public ErrorCollector errorCollector = new ErrorCollector();
 }

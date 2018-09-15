@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.movies.mmdb.model.CelebrityRole;
 
+import java.util.Objects;
+
 /**
  * <code>MovieCelebrityResponse</code> is a DTO class which have the all the
  * <code>{@link com.movies.mmdb.model.MovieCelebrity}</code> fields we want to expose in the view.
@@ -56,5 +58,21 @@ public class MovieCelebrityResponse {
 
     public void setCelebrity(CelebrityResponse celebrity) {
         this.celebrity = celebrity;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MovieCelebrityResponse that = (MovieCelebrityResponse) o;
+        return Objects.equals(credited, that.credited) &&
+                role == that.role &&
+                Objects.equals(characterName, that.characterName) &&
+                Objects.equals(celebrity, that.celebrity);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(credited, role, characterName, celebrity);
     }
 }

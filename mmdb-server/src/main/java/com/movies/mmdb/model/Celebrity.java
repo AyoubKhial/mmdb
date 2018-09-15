@@ -25,6 +25,16 @@ public class Celebrity extends DateAudit {
     private Set<CelebrityMedia> celebrityMedia = new HashSet<>();
     private Set<MovieCelebrity> movieCelebrities = new HashSet<>();
 
+    public Celebrity() {}
+
+    public Celebrity(Long id, String name, String picture, Date dateOfBirth, String biography) {
+        this.id = id;
+        this.name = name;
+        this.picture = picture;
+        this.dateOfBirth = dateOfBirth;
+        this.biography = biography;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long getId() {

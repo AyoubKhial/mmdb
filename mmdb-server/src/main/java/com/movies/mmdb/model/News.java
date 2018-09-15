@@ -5,6 +5,7 @@ import com.movies.mmdb.model.audit.DateAudit;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * <code>News</code> class is a domain model class that contains the information of a single News entry
@@ -21,6 +22,15 @@ public class News extends DateAudit {
     private String picture;
     private String text;
     private List<Tag> tags = new ArrayList<>();
+
+    public News() {}
+
+    public News(Long id, String title, String picture, String text) {
+        this.id = id;
+        this.title = title;
+        this.picture = picture;
+        this.text = text;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -69,5 +79,22 @@ public class News extends DateAudit {
 
     public void setTags(List<Tag> tags) {
         this.tags = tags;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        News news = (News) o;
+        return Objects.equals(id, news.id) &&
+                Objects.equals(title, news.title) &&
+                Objects.equals(picture, news.picture) &&
+                Objects.equals(text, news.text) &&
+                Objects.equals(tags, news.tags);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, picture, text, tags);
     }
 }

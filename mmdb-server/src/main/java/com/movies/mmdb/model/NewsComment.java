@@ -5,6 +5,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 /**
  * <code>NewsComment</code> class is a domain model class that contains the information of a single NewsComment entry
@@ -21,6 +22,15 @@ public class NewsComment extends DateAudit {
     private String text;
     private News news;
     private User user;
+
+    public NewsComment() {}
+
+    public NewsComment(Long id, String text, News news, User user) {
+        this.id = id;
+        this.text = text;
+        this.news = news;
+        this.user = user;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,5 +71,21 @@ public class NewsComment extends DateAudit {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        NewsComment that = (NewsComment) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(text, that.text) &&
+                Objects.equals(news, that.news) &&
+                Objects.equals(user, that.user);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, text, news, user);
     }
 }

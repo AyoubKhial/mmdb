@@ -5,6 +5,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 /**
  * <code>MovieReview</code> class is a domain model class that contains the information of a single MovieReview entry
@@ -26,6 +27,15 @@ public class MovieReview extends DateAudit {
     private String text;
     private Movie movie;
     private User user;
+
+    public MovieReview() {}
+
+    public MovieReview(Long id, Integer rating, String title, String text) {
+        this.id = id;
+        this.rating = rating;
+        this.title = title;
+        this.text = text;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -84,5 +94,23 @@ public class MovieReview extends DateAudit {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MovieReview that = (MovieReview) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(rating, that.rating) &&
+                Objects.equals(title, that.title) &&
+                Objects.equals(text, that.text) &&
+                Objects.equals(movie, that.movie) &&
+                Objects.equals(user, that.user);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, rating, title, text, movie, user);
     }
 }
