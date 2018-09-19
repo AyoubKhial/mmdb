@@ -33,7 +33,6 @@ public class GlobalRestExceptionHandler extends ResponseEntityExceptionHandler {
      * @see BadRequestException
      * @see ExceptionHandler
      */
-    // Throwing the exceptions given in the value with the information exist in ExceptionResponse
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<ExceptionResponse> badRequest(BadRequestException badRequestException) {
         ExceptionResponse response = new ExceptionResponse();
@@ -41,5 +40,22 @@ public class GlobalRestExceptionHandler extends ResponseEntityExceptionHandler {
         response.setDeveloperMessage(badRequestException.getMessage());
         response.setUserMessage("Page not found.");
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * This signalizes Spring that every time <code>ResourceNotFoundException</code> is thrown, Spring should call
+     * this method to handle it.
+     * @param resourceNotFoundException the exception we want to handle.
+     * @return json format response.
+     * @see ResourceNotFoundException
+     * @see ExceptionHandler
+     */
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ExceptionResponse> resourceNotFound(ResourceNotFoundException resourceNotFoundException) {
+        ExceptionResponse response = new ExceptionResponse();
+        response.setCode(HttpStatus.NOT_FOUND.value());
+        response.setDeveloperMessage(resourceNotFoundException.getMessage());
+        response.setUserMessage("Page not found.");
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 }

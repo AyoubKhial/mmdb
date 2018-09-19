@@ -13,7 +13,7 @@ import static com.movies.mmdb.util.ApplicationConstants.MAX_PAGE_SIZE;
  * @version 1.0
  * @since 1.0
  */
-public class ValidatingRequestParameters {
+public interface ValidatingRequestParameters {
 
     /**
      * Check if the size and the page number parameters are valid.
@@ -24,7 +24,7 @@ public class ValidatingRequestParameters {
      * @param page the page number
      * @param size the size of each page
      */
-    public static void validatePageNumberAndSize(String page, String size) {
+    static void validatePageNumberAndSize(String page, String size) {
         try {
             int PageInt = Integer.parseInt(page);
             if(PageInt < 0) {
@@ -56,7 +56,7 @@ public class ValidatingRequestParameters {
      * @param direction the direction of the sort
      * @param clazz the object
      */
-    public static void validateSortAndDirection(String sort, String direction, Class<?> clazz) {
+    static void validateSortAndDirection(String sort, String direction, Class<?> clazz) {
         boolean fieldFound = false;
         for(Field field: clazz.getDeclaredFields()) {
             if(field.getName().equals(sort) && field.getType() != List.class) {
@@ -79,6 +79,20 @@ public class ValidatingRequestParameters {
 
         if(!direction.equalsIgnoreCase("asc") && !direction.equalsIgnoreCase("desc")) {
             throw new BadRequestException("The direction parameter can be 'asc' or 'desc'.");
+        }
+    }
+
+    /**
+     * Check if the id parameter is valid.
+     * <p>
+     * The id should be an integer, otherwise <code>BadRequestException</code> will be thrown
+     * @param requestId the id field
+     */
+    static void validateId(String requestId) {
+        try {
+            Integer.parseInt(requestId);
+        } catch (NumberFormatException ex) {
+            throw new BadRequestException("size parameter accept integer only, '" + requestId + "' is not an integer.");
         }
     }
 }

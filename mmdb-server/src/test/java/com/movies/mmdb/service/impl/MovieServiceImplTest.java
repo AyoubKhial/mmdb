@@ -2,16 +2,20 @@ package com.movies.mmdb.service.impl;
 
 import com.movies.mmdb.DummyData;
 import com.movies.mmdb.dto.MovieResponse;
+import com.movies.mmdb.exception.ResourceNotFoundException;
 import com.movies.mmdb.model.*;
 import com.movies.mmdb.repository.MovieRepository;
-import com.movies.mmdb.rule.MockitoRuleRule;
-import com.movies.mmdb.util.DTOModelMapper;
 import com.movies.mmdb.util.PagedResponse;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
+import org.mockito.quality.Strictness;
 import org.springframework.data.domain.*;
 
 import java.util.*;
@@ -21,18 +25,14 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 
-/**
- * A test class to test <code>MovieServiceImpl</code> class.
- * <p>
- * Extending <code>MockitoRuleRule</code> make sur to run the test with mockito and inject the properties annotated
- * <code>@Mock</code> into the property annotated with <code>@InjectMocks</code>
- * @author Ayoub Khial
- * @version 1.0
- * @see MockitoRuleRule
- * @see MovieServiceImpl
- * @since 1.0
- */
-public class MovieServiceImplTest extends MockitoRuleRule {
+
+public class MovieServiceImplTest {
+
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
+
+    @Rule
+    public MockitoRule mockitoRule = MockitoJUnit.rule().strictness(Strictness.STRICT_STUBS);
 
     @Mock
     private MovieRepository movieRepository;
@@ -41,94 +41,82 @@ public class MovieServiceImplTest extends MockitoRuleRule {
     private MovieServiceImpl movieService;
 
     private Movie movie;
-
     private Page<Movie> moviePage;
+    private PagedResponse<MovieResponse> pagedMovieResponse;
+    private MovieResponse movieResponse;
 
     @Before
     public void setUp() {
-        // initialise the movie
         this.movie = DummyData.dummyMovie();
-
-        // initialise movie page
-        List<Movie> movieList = new ArrayList<>(Collections.singletonList(this.movie));
-        this.moviePage = new PageImpl<>(movieList);
+        this.moviePage = DummyData.dummyMoviePage();
+        this.pagedMovieResponse = DummyData.dummyPagedMovieResponse();
+        this.movieResponse = DummyData.dummyMovieResponse();
     }
 
-    /**
-     * A test case for <code>getAllMovies</code> Method.
-     * @see MovieServiceImpl#getAllMovies(String, String, String, String)
-     */
     @Test
-    public void getAllMovies_PageableGiven_ShouldReturnPagedMovieResponse() {
-        // Clear movie page
-        MovieServiceImpl.removeUndesirableFields(this.moviePage);
-
-        // mock MovieRepository findAll method result to return movie page
+    public void getAllMovies_PageableWithDescDirectionGiven_ShouldReturnPagedMovieResponse() {
         when(this.movieRepository.findAll(any(PageRequest.class))).thenReturn(this.moviePage);
 
-        // map movie page content to movie response list
-        List<MovieResponse> movieResponseList = this.moviePage.map(DTOModelMapper::mapMovieToMovieResponse).getContent();
+        PagedResponse<MovieResponse> actualPagedMovieResponse = this.movieService.getAllMovies("0", "1", "id","desc");
 
-        // expected value
-        PagedResponse<MovieResponse> expectedMovieResponsePage = new PagedResponse<>(movieResponseList, this.moviePage.getNumber(),
-                this.moviePage.getSize(), this.moviePage.getTotalElements(), this.moviePage.getTotalPages(), this.moviePage.isLast());
-
-        // actual value
-        PagedResponse<MovieResponse> actualMovieResponsePage = this.movieService.getAllMovies("0", "20", "id","desc");
-
-        // assertion
-        assertThat("The actual response is different than the expected", actualMovieResponsePage, is(equalTo(expectedMovieResponsePage)));
+        assertThat("The actual response is different than the expected.", actualPagedMovieResponse, is(equalTo(this.pagedMovieResponse)));
     }
 
-    /**
-     * A test case for <code>getAllMovies</code> Method.
-     * @see MovieServiceImpl#getAllMovies(String, String, String, String)
-     */
+    @Test
+    public void getAllMovies_PageableWithAscDirectionGiven_ShouldReturnPagedMovieResponse() {
+        when(this.movieRepository.findAll(any(PageRequest.class))).thenReturn(this.moviePage);
+
+        PagedResponse<MovieResponse> actualMovieResponsePage = this.movieService.getAllMovies("0", "20", "id","asc");
+
+        assertThat("The actual response is different than the expected.", actualMovieResponsePage, is(equalTo(this.pagedMovieResponse)));
+    }
+
     @Test
     public void getAllMovies_PageableGiven_ShouldReturnEmptyPagedMovieResponse() {
-        // create empty list
-        List<Movie> movieList = new ArrayList<>();
+        when(this.movieRepository.findAll(any(PageRequest.class))).thenReturn(new PageImpl<>(new ArrayList<>()));
 
-        // convert list to page
-        Page<Movie> moviePage = new PageImpl<>(movieList);
-        when(this.movieRepository.findAll(any(PageRequest.class))).thenReturn(moviePage);
+        PagedResponse<MovieResponse> actualMovieResponsePage = this.movieService.getAllMovies("0", "20", "createdAt","desc");
 
-        // expected value
-        PagedResponse<MovieResponse> expectedMovieResponsePage = new PagedResponse<>(Collections.emptyList(), moviePage.getNumber(),
-                moviePage.getSize(), moviePage.getTotalElements(), moviePage.getTotalPages(), moviePage.isLast());
+        PagedResponse<MovieResponse> expectedMovieResponsePage = new PagedResponse<>(Collections.emptyList(), 0, 0, 0, 1, true);
 
-        // actual value
-        PagedResponse<MovieResponse> actualMovieResponsePage = this.movieService.getAllMovies("0", "20", "id","desc");
-
-        assertThat("", actualMovieResponsePage, is(equalTo(expectedMovieResponsePage)));
+        assertThat("The actual response is different than the expected.", actualMovieResponsePage, is(equalTo(expectedMovieResponsePage)));
     }
 
-    /**
-     * A test case for <code>removeUndesirableFields</code> Method.
-     * @see MovieServiceImpl#removeUndesirableFields(Page)
-     */
+
     @Test
     public void removeUndesirableFields_PageGiven_ShouldRemoveUndesirableFields() {
+        List<Movie> movieList = new ArrayList<>(Collections.singletonList(this.movie));
 
-        // actual value
-        Page<Movie> actualMoviePage = MovieServiceImpl.removeUndesirableFields(this.moviePage);
+        Page<Movie> moviePage = new PageImpl<>(movieList);
 
-        // instantiate new movie based on a class variable 'movie'
-        Movie movie1 = new Movie(this.movie);
-        movie1.getMovieReviews().clear();
-        movie1.getMovieMedia().clear();
+        Page<Movie> actualPageMovie = MovieServiceImpl.removeUndesirableFields(moviePage);
 
-        // create list of movies and add movie1 to it
-        List<Movie> movieList1 = new ArrayList<>(Collections.singletonList(movie1));
+        assertThat("The actual response is different than the expected.", actualPageMovie, is(equalTo(this.moviePage)));
+    }
 
-        // convert movieList1 to page
-        Page<Movie> moviePage1 = new PageImpl<>(movieList1);
+    @Test
+    public void getMovieById_IdGiven_ShouldReturnMovieResponse() {
+        when(this.movieRepository.findById(anyLong())).thenReturn(Optional.of(this.movie));
 
-        assertThat("", actualMoviePage, is(equalTo(moviePage1)));
+        MovieResponse actualMovieResponse = this.movieService.getMovieById("1");
+
+        assertThat("The actual response is different than the expected.", actualMovieResponse, is(equalTo(this.movieResponse)));
+    }
+
+    @Test
+    public void getMovieById_NonExistIdGiven_ShouldThrowResourceNotFoundException() {
+        this.expectedException.expect(ResourceNotFoundException.class);
+        this.expectedException.expectMessage("movie not found with {id : '2'}");
+
+        when(this.movieRepository.findById(anyLong())).thenReturn(Optional.empty());
+        this.movieService.getMovieById("2");
     }
 
     @After
     public void tearDown() {
         this.movie = null;
+        this.moviePage = null;
+        this.pagedMovieResponse = null;
+        this.movieResponse = null;
     }
 }

@@ -1,6 +1,7 @@
 package com.movies.mmdb.service.impl;
 
 import com.movies.mmdb.dto.MovieResponse;
+import com.movies.mmdb.exception.ResourceNotFoundException;
 import com.movies.mmdb.model.Movie;
 import com.movies.mmdb.repository.MovieRepository;
 import com.movies.mmdb.service.MovieService;
@@ -8,10 +9,7 @@ import com.movies.mmdb.service.ValidatingRequestParameters;
 import com.movies.mmdb.util.DTOModelMapper;
 import com.movies.mmdb.util.PagedResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -69,6 +67,22 @@ public class MovieServiceImpl implements MovieService {
         // return the paged response
         return new PagedResponse<>(movieResponseList, moviePage.getNumber(),
                 moviePage.getSize(), moviePage.getTotalElements(), moviePage.getTotalPages(), moviePage.isLast());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public MovieResponse getMovieById(String id) {
+        // get the movie with the given id if its exist, otherwise an exception will be thrown
+        ValidatingRequestParameters.validateId(id);
+        Long movieId = Long.valueOf(id);
+        Movie movie = this.movieRepository.findById(movieId).orElseThrow(
+                () -> new ResourceNotFoundException("movie", "id", movieId)
+        );
+
+        // map the movie to a movie response and return it
+        return DTOModelMapper.mapMovieToMovieResponse(movie);
     }
 
     /**

@@ -18,16 +18,16 @@ import org.modelmapper.ModelMapper;
  * @since 1.0
  *
  */
-public class DTOModelMapper {
+public interface DTOModelMapper {
 
     /**
-     *
+     * Map a <code>movie</code> to a <code>MovieResponse</code> using <code>ModelMapper</code> library.
      * @param movie a movie Object we want to map DTO from.
-     * @return the generated DTOs - <code>MovieResponse</code>
+     * @return the generated <code>MovieResponse</code> from <code>Movie</code>.
      * @see Movie
      * @see MovieResponse
      */
-    public static MovieResponse mapMovieToMovieResponse(Movie movie) {
+    static MovieResponse mapMovieToMovieResponse(Movie movie) {
         ModelMapper modelMapper = new ModelMapper();
         return modelMapper.map(movie, MovieResponse.class);
     }

@@ -5,6 +5,7 @@ import com.movies.mmdb.model.audit.DateAudit;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -97,5 +98,24 @@ public class Celebrity extends DateAudit {
 
     public void setMovieCelebrities(Set<MovieCelebrity> movieCelebrities) {
         this.movieCelebrities = movieCelebrities;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Celebrity celebrity = (Celebrity) o;
+        return Objects.equals(id, celebrity.id) &&
+                Objects.equals(name, celebrity.name) &&
+                Objects.equals(picture, celebrity.picture) &&
+                Objects.equals(dateOfBirth, celebrity.dateOfBirth) &&
+                Objects.equals(biography, celebrity.biography) &&
+                Objects.equals(celebrityMedia, celebrity.celebrityMedia) &&
+                Objects.equals(movieCelebrities, celebrity.movieCelebrities);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, picture, dateOfBirth, biography, celebrityMedia, movieCelebrities);
     }
 }

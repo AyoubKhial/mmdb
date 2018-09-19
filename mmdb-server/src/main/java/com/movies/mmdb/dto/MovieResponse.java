@@ -7,10 +7,7 @@ import com.movies.mmdb.model.CelebrityRole;
 import com.movies.mmdb.model.MediaType;
 
 import java.sql.Time;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -145,8 +142,14 @@ public class MovieResponse {
      * @see MediaType
      */
     public void setMovieMedia(List<MovieMediaResponse> movieMedias) {
-        this.setPhotos(movieMedias.stream().filter(movieMedia -> movieMedia.getType().equals(MediaType.PHOTO)).collect(Collectors.toList()));
-        this.setVideos(movieMedias.stream().filter(movieMedia -> movieMedia.getType().equals(MediaType.VIDEO)).collect(Collectors.toList()));
+        // partitioning the list based on the media type
+        Map<Boolean, List<MovieMediaResponse>> medias = movieMedias
+                .stream()
+                .collect(Collectors.partitioningBy(s -> s.getType().equals(MediaType.PHOTO)));
+
+        // get each type, true => PHOTO, false => VIDEO
+        this.setPhotos(medias.get(true));
+        this.setVideos(medias.get(false));
     }
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -192,9 +195,14 @@ public class MovieResponse {
      * @see CelebrityRole
      */
     public void setCelebrities(List<MovieCelebrityResponse> movieCelebrities) {
-        this.setCast(movieCelebrities.stream().filter(movieCelebrity -> movieCelebrity.getRole().equals(CelebrityRole.ACTOR)).collect(Collectors.toList()));
-        this.setDirectors(movieCelebrities.stream().filter(movieCelebrity -> movieCelebrity.getRole().equals(CelebrityRole.DIRECTOR)).collect(Collectors.toList()));
-        this.setWriters(movieCelebrities.stream().filter(movieCelebrity -> movieCelebrity.getRole().equals(CelebrityRole.WRITER)).collect(Collectors.toList()));
+        // grouping the list based on the role
+        Map<Object, List<MovieCelebrityResponse>> celebrities = movieCelebrities.stream()
+                .collect(Collectors.groupingBy(MovieCelebrityResponse::getRole));
+
+        // get each group
+        this.setCast(celebrities.get(CelebrityRole.ACTOR));
+        this.setDirectors(celebrities.get(CelebrityRole.DIRECTOR));
+        this.setWriters(celebrities.get(CelebrityRole.WRITER));
     }
 
     public List<MovieCelebrityResponse> getCast() {
