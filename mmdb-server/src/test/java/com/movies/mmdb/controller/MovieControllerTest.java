@@ -104,7 +104,7 @@ public class MovieControllerTest {
     public void getRelatedMovies_IdGiven_ShouldReturnPagedMovieResponse() throws Exception {
         given(this.movieService.getRelatedMovies(anyString(), anyString(), anyString())).willReturn(this.pagedMovieResponse);
 
-        mockMvc.perform(get("/api/movies/related/2").accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/api/movies/2/related").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.content", hasSize(1)))

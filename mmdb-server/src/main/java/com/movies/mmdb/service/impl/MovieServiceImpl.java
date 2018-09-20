@@ -164,7 +164,7 @@ public class MovieServiceImpl implements MovieService {
         Pageable pageable = PageRequest.of(Integer.parseInt(page), Integer.parseInt(size));
 
         // get the movies as a page from the repository
-        Page<Movie> moviePage = this.movieRepository.findRelatedMoviesToAMovieById(Integer.parseInt(id), pageable);
+        Page<Movie> moviePage = this.movieRepository.findRelatedMoviesToAMovieById(Long.parseLong(id), pageable);
 
         // if the page is empty, return pagedResponse with empty list
         if(moviePage.getNumberOfElements() == 0) {

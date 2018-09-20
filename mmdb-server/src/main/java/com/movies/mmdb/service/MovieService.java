@@ -2,7 +2,6 @@ package com.movies.mmdb.service;
 
 import com.movies.mmdb.dto.MovieResponse;
 import com.movies.mmdb.util.PagedResponse;
-import org.springframework.data.domain.Pageable;
 
 /**
  * This class is holding the business logic about the <code>Movie</code> model.
@@ -55,7 +54,7 @@ public interface MovieService {
                                                      String page, String size, String sort, String direction);
 
     /**
-     * This method will call {@link com.movies.mmdb.repository.MovieRepository#findRelatedMoviesToAMovieById(int, Pageable)}
+     * This method will call {@link com.movies.mmdb.repository.MovieRepository#findRelatedMoviesToAMovieById(int, org.springframework.data.domain.Pageable)}
      * method and get a page of movies related to the given movie.
      * @param id the id of the movie.
      * @param page the page number.

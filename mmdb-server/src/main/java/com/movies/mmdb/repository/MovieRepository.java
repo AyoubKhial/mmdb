@@ -48,8 +48,10 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
      * @param pageable the page information.
      * @return a page of movies if there's any movies found, otherwise an empty page will be in return.
      */
-    @Query(value = "SELECT * FROM movie m INNER JOIN movie_genre mg ON m.id = mg.movie_id " +
-            "WHERE mg.genre_id = (SELECT mg2.genre_id FROM movie_genre mg2 WHERE mg2.movie_id = :id AND mg2.movie_id <> mg.movie_id AND mg.genre_id = mg2.genre_id) " +
-            "GROUP BY mg.movie_id ORDER BY count(*) DESC", nativeQuery = true)
-    Page<Movie> findRelatedMoviesToAMovieById(@Param("id") int id, Pageable pageable);
+    @Query("SELECT m FROM Movie m JOIN m.genres mg " +
+            "WHERE mg.id IN " +
+            "(SELECT g.id FROM Genre g JOIN g.movies gm WHERE gm.id = :id) " +
+            "AND m.id <> :id " +
+            "GROUP BY m ORDER BY count(m) DESC")
+    Page<Movie> findRelatedMoviesToAMovieById(@Param("id") Long id, Pageable pageable);
 }

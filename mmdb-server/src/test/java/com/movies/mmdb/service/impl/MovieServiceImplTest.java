@@ -144,7 +144,7 @@ public class MovieServiceImplTest {
 
     @Test
     public void getRelatedMovies_IdGiven_ShouldReturnPagedMovieResponse() {
-        when(this.movieRepository.findRelatedMoviesToAMovieById(anyInt(), any(PageRequest.class))).thenReturn(this.moviePage);
+        when(this.movieRepository.findRelatedMoviesToAMovieById(anyLong(), any(PageRequest.class))).thenReturn(this.moviePage);
 
         PagedResponse<MovieResponse> actualPagedMovieResponse = this.movieService.getRelatedMovies("1", "0", "10");
 
@@ -153,7 +153,7 @@ public class MovieServiceImplTest {
 
     @Test
     public void getRelatedMovies_IdGiven_ShouldReturnEmptyPagedMovieResponse() {
-        when(this.movieRepository.findRelatedMoviesToAMovieById(anyInt(), any(PageRequest.class))).thenReturn(new PageImpl<>(new ArrayList<>()));
+        when(this.movieRepository.findRelatedMoviesToAMovieById(anyLong(), any(PageRequest.class))).thenReturn(new PageImpl<>(new ArrayList<>()));
 
         PagedResponse<MovieResponse> actualPagedMovieResponse = this.movieService.getRelatedMovies("1", "0", "10");
 
