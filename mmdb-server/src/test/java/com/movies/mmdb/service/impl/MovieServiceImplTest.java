@@ -101,7 +101,7 @@ public class MovieServiceImplTest {
     }
 
     @Test
-    public void getMoviesByCriteria_CriteriaWithDescSortDirectionGiven_ShouldReturnMovieResponse() {
+    public void getMoviesByCriteria_CriteriaWithDescSortDirectionGiven_ShouldReturnPagedMovieResponse() {
         when(this.movieRepository.findByNameContainingAndRatingBetweenAndReleaseDateBetween(anyString(), anyFloat(), anyFloat(), any(Date.class), any(Date.class), any(PageRequest.class)))
                 .thenReturn(this.moviePage);
 
@@ -111,7 +111,7 @@ public class MovieServiceImplTest {
     }
 
     @Test
-    public void getMoviesByCriteria_CriteriaWithAscSortDirectionGiven_ShouldReturnMovieResponse() {
+    public void getMoviesByCriteria_CriteriaWithAscSortDirectionGiven_ShouldReturnPagedMovieResponse() {
         when(this.movieRepository.findByNameContainingAndRatingBetweenAndReleaseDateBetween(anyString(), anyFloat(), anyFloat(), any(Date.class), any(Date.class), any(PageRequest.class)))
                 .thenReturn(this.moviePage);
 
@@ -121,7 +121,7 @@ public class MovieServiceImplTest {
     }
 
     @Test
-    public void getMoviesByCriteria_EmptyToDateGiven_ShouldReturnMovieResponse() {
+    public void getMoviesByCriteria_EmptyToDateGiven_ShouldReturnPagedMovieResponse() {
         when(this.movieRepository.findByNameContainingAndRatingBetweenAndReleaseDateBetween(anyString(), anyFloat(), anyFloat(), any(Date.class), any(Date.class), any(PageRequest.class)))
                 .thenReturn(this.moviePage);
 
@@ -136,6 +136,26 @@ public class MovieServiceImplTest {
                 .thenReturn(new PageImpl<>(new ArrayList<>()));
 
         PagedResponse<MovieResponse> actualPagedMovieResponse = this.movieService.getMoviesByCriteria("Scarface", "5", "10", "1950", "1970","0", "1", "id","asc");
+
+        PagedResponse<MovieResponse> expectedMovieResponsePage = new PagedResponse<>(Collections.emptyList(), 0, 0, 0, 1, true);
+
+        assertThat("The actual response is different than the expected.", actualPagedMovieResponse, is(equalTo(expectedMovieResponsePage)));
+    }
+
+    @Test
+    public void getRelatedMovies_IdGiven_ShouldReturnPagedMovieResponse() {
+        when(this.movieRepository.findRelatedMoviesToAMovieById(anyInt(), any(PageRequest.class))).thenReturn(this.moviePage);
+
+        PagedResponse<MovieResponse> actualPagedMovieResponse = this.movieService.getRelatedMovies("1", "0", "10");
+
+        assertThat("The actual response is different than the expected.", actualPagedMovieResponse, is(equalTo(this.pagedMovieResponse)));
+    }
+
+    @Test
+    public void getRelatedMovies_IdGiven_ShouldReturnEmptyPagedMovieResponse() {
+        when(this.movieRepository.findRelatedMoviesToAMovieById(anyInt(), any(PageRequest.class))).thenReturn(new PageImpl<>(new ArrayList<>()));
+
+        PagedResponse<MovieResponse> actualPagedMovieResponse = this.movieService.getRelatedMovies("1", "0", "10");
 
         PagedResponse<MovieResponse> expectedMovieResponsePage = new PagedResponse<>(Collections.emptyList(), 0, 0, 0, 1, true);
 

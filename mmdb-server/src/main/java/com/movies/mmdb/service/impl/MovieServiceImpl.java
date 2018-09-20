@@ -151,6 +151,39 @@ public class MovieServiceImpl implements MovieService {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public PagedResponse<MovieResponse> getRelatedMovies(String id, String page, String size) {
+        // validate the request parameters
+        ValidatingRequestParameters.parameterShouldBeInteger("id", id);
+        ValidatingRequestParameters.parameterShouldBeInteger("page", page);
+        ValidatingRequestParameters.parameterShouldBeInteger("size", size);
+
+        // create a pageable from the arguments
+        Pageable pageable = PageRequest.of(Integer.parseInt(page), Integer.parseInt(size));
+
+        // get the movies as a page from the repository
+        Page<Movie> moviePage = this.movieRepository.findRelatedMoviesToAMovieById(Integer.parseInt(id), pageable);
+
+        // if the page is empty, return pagedResponse with empty list
+        if(moviePage.getNumberOfElements() == 0) {
+            return new PagedResponse<>(Collections.emptyList(), moviePage.getNumber(),
+                    moviePage.getSize(), moviePage.getTotalElements(), moviePage.getTotalPages(), moviePage.isLast());
+        }
+
+        // remove the undesirable fields from the page
+        removeUndesirableFields(moviePage);
+
+        // map the page into a list of movie DTO
+        List<MovieResponse> movieResponseList = moviePage.map(DTOModelMapper::mapMovieToMovieResponse).getContent();
+
+        // return the paged response
+        return new PagedResponse<>(movieResponseList, moviePage.getNumber(),
+                moviePage.getSize(), moviePage.getTotalElements(), moviePage.getTotalPages(), moviePage.isLast());
+    }
+
+    /**
      * Remove som unnecessarily fields to keep the response clean.
      * <p>
      * In the case where the client request for a list of movies we can't respond with all the information for

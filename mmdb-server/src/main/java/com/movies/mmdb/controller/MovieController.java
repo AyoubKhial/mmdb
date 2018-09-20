@@ -91,4 +91,19 @@ public class MovieController {
         PagedResponse<MovieResponse> movieResponsePage = this.movieService.getMoviesByCriteria(name, minRating, maxRating, fromDate, toDate, page, size, sort, direction);
         return ResponseEntity.ok(movieResponsePage);
     }
+
+    /**
+     * Get related movies to a movie.
+     * @param id the id of the movie.
+     * @param page the page number.
+     * @param size the size of a single page.
+     * @return a response with the related movies found.
+     */
+    @GetMapping("/movies/{id}/related/")
+    public ResponseEntity<PagedResponse<MovieResponse>> getRelatedMovies(@PathVariable String id,
+                                                                            @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) String page,
+                                                                            @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) String size) {
+        PagedResponse<MovieResponse> movieResponsePage = this.movieService.getRelatedMovies(id, page, size);
+        return ResponseEntity.ok(movieResponsePage);
+    }
 }

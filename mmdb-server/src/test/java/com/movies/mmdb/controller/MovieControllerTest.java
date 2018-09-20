@@ -81,7 +81,7 @@ public class MovieControllerTest {
     }
 
     @Test
-    public void getMoviesByCriteria_PageableGiven_ShouldReturnPagedMovieResponse() throws Exception {
+    public void getMoviesByCriteria_CriteriaGiven_ShouldReturnPagedMovieResponse() throws Exception {
         given(this.movieService.getMoviesByCriteria(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString())).willReturn(this.pagedMovieResponse);
 
         mockMvc.perform(get("/api/movies/search?name=Scarface&min_rating=5").accept(MediaType.APPLICATION_JSON))
@@ -97,6 +97,26 @@ public class MovieControllerTest {
                 .andExpect(jsonPath("$.content[0].poster", is("picture.png")));
 
         verify(this.movieService, times(1)).getMoviesByCriteria(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString());
+        verifyNoMoreInteractions(this.movieService);
+    }
+
+    @Test
+    public void getRelatedMovies_IdGiven_ShouldReturnPagedMovieResponse() throws Exception {
+        given(this.movieService.getRelatedMovies(anyString(), anyString(), anyString())).willReturn(this.pagedMovieResponse);
+
+        mockMvc.perform(get("/api/movies/related/2").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.content", hasSize(1)))
+                .andExpect(jsonPath("$.content[0].id", is(1)))
+                .andExpect(jsonPath("$.content[0].name", is("Scarface")))
+                .andExpect(jsonPath("$.content[0].releaseDate", is("09-12-1983")))
+                .andExpect(jsonPath("$.content[0].runtime", is("02:50:00")))
+                .andExpect(jsonPath("$.content[0].rating", is(8.3)))
+                .andExpect(jsonPath("$.content[0].storyline", is("This is the storyline.")))
+                .andExpect(jsonPath("$.content[0].poster", is("picture.png")));
+
+        verify(this.movieService, times(1)).getRelatedMovies(anyString(), anyString(), anyString());
         verifyNoMoreInteractions(this.movieService);
     }
 
