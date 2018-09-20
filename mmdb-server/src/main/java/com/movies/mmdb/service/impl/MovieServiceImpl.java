@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
@@ -34,7 +35,10 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public PagedResponse<MovieResponse> getAllMovies(String page, String size, String sort, String direction) {
         // check if the page arguments are valid
-        ValidatingRequestParameters.validatePageNumberAndSize(page, size);
+        ValidatingRequestParameters.parameterShouldBeInteger("page", page);
+        ValidatingRequestParameters.parameterShouldBeInteger("size", size);
+        ValidatingRequestParameters.validatePageNumberParameter(page);
+        ValidatingRequestParameters.validatePageSizeParameter(size);
         ValidatingRequestParameters.validateSortAndDirection(sort, direction, Movie.class);
 
         // get the sort direction from the arguments and convert it to Sort.Direction
@@ -75,7 +79,7 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public MovieResponse getMovieById(String id) {
         // get the movie with the given id if its exist, otherwise an exception will be thrown
-        ValidatingRequestParameters.validateId(id);
+        ValidatingRequestParameters.parameterShouldBeNumber("id", id);
         Long movieId = Long.valueOf(id);
         Movie movie = this.movieRepository.findById(movieId).orElseThrow(
                 () -> new ResourceNotFoundException("movie", "id", movieId)
@@ -83,6 +87,67 @@ public class MovieServiceImpl implements MovieService {
 
         // map the movie to a movie response and return it
         return DTOModelMapper.mapMovieToMovieResponse(movie);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public PagedResponse<MovieResponse> getMoviesByCriteria(String name, String minRating, String maxRating, String fromDate,
+                                                            String toDate, String page, String size, String sort, String direction) {
+        // if the value of toDate is empty => toDate = current year
+        if(toDate.isEmpty()) {
+            toDate = String.valueOf(Calendar.getInstance().get(Calendar.YEAR));
+        }
+
+        // validate the request parameters
+        ValidatingRequestParameters.parameterShouldBeInteger("from", fromDate);
+        ValidatingRequestParameters.parameterShouldBeInteger("to", toDate);
+        ValidatingRequestParameters.parameterShouldBeInteger("page", page);
+        ValidatingRequestParameters.parameterShouldBeInteger("size", size);
+        ValidatingRequestParameters.parameterShouldBeNumber("min_rating", minRating);
+        ValidatingRequestParameters.parameterShouldBeNumber("max_rating", maxRating);
+        ValidatingRequestParameters.validatePageNumberParameter(page);
+        ValidatingRequestParameters.validatePageSizeParameter(size);
+        ValidatingRequestParameters.validateSortAndDirection(sort, direction, Movie.class);
+
+        // get the sort direction from the arguments and convert it to Sort.Direction
+        Sort.Direction sortDirection;
+        if(direction.equalsIgnoreCase("asc")) {
+            sortDirection = Sort.Direction.ASC;
+        }
+        else {
+            sortDirection = Sort.Direction.DESC;
+        }
+
+        // get the dates from the arguments and convert int to Calendar
+        Calendar newFromDate = Calendar.getInstance();
+        newFromDate.set(Calendar.YEAR, Integer.parseInt(fromDate));
+        Calendar newToDate = Calendar.getInstance();
+        newToDate.set(Calendar.YEAR, Integer.parseInt(toDate));
+
+        // create a pageable from the arguments
+        Pageable pageable = PageRequest.of(Integer.parseInt(page), Integer.parseInt(size), sortDirection, sort);
+
+        // get the movies as a page from the repository
+        Page<Movie> moviePage = this.movieRepository.findByNameContainingAndRatingBetweenAndReleaseDateBetween(name,
+                Float.valueOf(minRating), Float.valueOf(maxRating), newFromDate.getTime(), newToDate.getTime(), pageable);
+
+        // if the page is empty, return pagedResponse with empty list
+        if(moviePage.getNumberOfElements() == 0) {
+            return new PagedResponse<>(Collections.emptyList(), moviePage.getNumber(),
+                    moviePage.getSize(), moviePage.getTotalElements(), moviePage.getTotalPages(), moviePage.isLast());
+        }
+
+        // remove the undesirable fields from the page
+        removeUndesirableFields(moviePage);
+
+        // map the page into a list of movie DTO
+        List<MovieResponse> movieResponseList = moviePage.map(DTOModelMapper::mapMovieToMovieResponse).getContent();
+
+        // return the paged response
+        return new PagedResponse<>(movieResponseList, moviePage.getNumber(),
+                moviePage.getSize(), moviePage.getTotalElements(), moviePage.getTotalPages(), moviePage.isLast());
     }
 
     /**

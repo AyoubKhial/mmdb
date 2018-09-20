@@ -54,7 +54,7 @@ public class MovieServiceImplTest {
     }
 
     @Test
-    public void getAllMovies_PageableWithDescDirectionGiven_ShouldReturnPagedMovieResponse() {
+    public void getAllMovies_PageableWithDescSortDirectionGiven_ShouldReturnPagedMovieResponse() {
         when(this.movieRepository.findAll(any(PageRequest.class))).thenReturn(this.moviePage);
 
         PagedResponse<MovieResponse> actualPagedMovieResponse = this.movieService.getAllMovies("0", "1", "id","desc");
@@ -63,7 +63,7 @@ public class MovieServiceImplTest {
     }
 
     @Test
-    public void getAllMovies_PageableWithAscDirectionGiven_ShouldReturnPagedMovieResponse() {
+    public void getAllMovies_PageableWithAscSortDirectionGiven_ShouldReturnPagedMovieResponse() {
         when(this.movieRepository.findAll(any(PageRequest.class))).thenReturn(this.moviePage);
 
         PagedResponse<MovieResponse> actualMovieResponsePage = this.movieService.getAllMovies("0", "20", "id","asc");
@@ -82,18 +82,6 @@ public class MovieServiceImplTest {
         assertThat("The actual response is different than the expected.", actualMovieResponsePage, is(equalTo(expectedMovieResponsePage)));
     }
 
-
-    @Test
-    public void removeUndesirableFields_PageGiven_ShouldRemoveUndesirableFields() {
-        List<Movie> movieList = new ArrayList<>(Collections.singletonList(this.movie));
-
-        Page<Movie> moviePage = new PageImpl<>(movieList);
-
-        Page<Movie> actualPageMovie = MovieServiceImpl.removeUndesirableFields(moviePage);
-
-        assertThat("The actual response is different than the expected.", actualPageMovie, is(equalTo(this.moviePage)));
-    }
-
     @Test
     public void getMovieById_IdGiven_ShouldReturnMovieResponse() {
         when(this.movieRepository.findById(anyLong())).thenReturn(Optional.of(this.movie));
@@ -110,6 +98,59 @@ public class MovieServiceImplTest {
 
         when(this.movieRepository.findById(anyLong())).thenReturn(Optional.empty());
         this.movieService.getMovieById("2");
+    }
+
+    @Test
+    public void getMoviesByCriteria_CriteriaWithDescSortDirectionGiven_ShouldReturnMovieResponse() {
+        when(this.movieRepository.findByNameContainingAndRatingBetweenAndReleaseDateBetween(anyString(), anyFloat(), anyFloat(), any(Date.class), any(Date.class), any(PageRequest.class)))
+                .thenReturn(this.moviePage);
+
+        PagedResponse<MovieResponse> actualPagedMovieResponse = this.movieService.getMoviesByCriteria("Scarface", "5", "10", "1950", "1970","0", "1", "id","desc");
+
+        assertThat("The actual response is different than the expected.", actualPagedMovieResponse, is(equalTo(this.pagedMovieResponse)));
+    }
+
+    @Test
+    public void getMoviesByCriteria_CriteriaWithAscSortDirectionGiven_ShouldReturnMovieResponse() {
+        when(this.movieRepository.findByNameContainingAndRatingBetweenAndReleaseDateBetween(anyString(), anyFloat(), anyFloat(), any(Date.class), any(Date.class), any(PageRequest.class)))
+                .thenReturn(this.moviePage);
+
+        PagedResponse<MovieResponse> actualPagedMovieResponse = this.movieService.getMoviesByCriteria("Scarface", "5", "10", "1950", "1970","0", "1", "id","asc");
+
+        assertThat("The actual response is different than the expected.", actualPagedMovieResponse, is(equalTo(this.pagedMovieResponse)));
+    }
+
+    @Test
+    public void getMoviesByCriteria_EmptyToDateGiven_ShouldReturnMovieResponse() {
+        when(this.movieRepository.findByNameContainingAndRatingBetweenAndReleaseDateBetween(anyString(), anyFloat(), anyFloat(), any(Date.class), any(Date.class), any(PageRequest.class)))
+                .thenReturn(this.moviePage);
+
+        PagedResponse<MovieResponse> actualPagedMovieResponse = this.movieService.getMoviesByCriteria("Scarface", "5", "10", "1950", "","0", "1", "id","asc");
+
+        assertThat("The actual response is different than the expected.", actualPagedMovieResponse, is(equalTo(this.pagedMovieResponse)));
+    }
+
+    @Test
+    public void getMoviesByCriteria_CriteriaGiven_ShouldReturnEmptyPagedMovieResponse() {
+        when(this.movieRepository.findByNameContainingAndRatingBetweenAndReleaseDateBetween(anyString(), anyFloat(), anyFloat(), any(Date.class), any(Date.class), any(PageRequest.class)))
+                .thenReturn(new PageImpl<>(new ArrayList<>()));
+
+        PagedResponse<MovieResponse> actualPagedMovieResponse = this.movieService.getMoviesByCriteria("Scarface", "5", "10", "1950", "1970","0", "1", "id","asc");
+
+        PagedResponse<MovieResponse> expectedMovieResponsePage = new PagedResponse<>(Collections.emptyList(), 0, 0, 0, 1, true);
+
+        assertThat("The actual response is different than the expected.", actualPagedMovieResponse, is(equalTo(expectedMovieResponsePage)));
+    }
+
+    @Test
+    public void removeUndesirableFields_PageGiven_ShouldRemoveUndesirableFields() {
+        List<Movie> movieList = new ArrayList<>(Collections.singletonList(this.movie));
+
+        Page<Movie> moviePage = new PageImpl<>(movieList);
+
+        Page<Movie> actualPageMovie = MovieServiceImpl.removeUndesirableFields(moviePage);
+
+        assertThat("The actual response is different than the expected.", actualPageMovie, is(equalTo(this.moviePage)));
     }
 
     @After

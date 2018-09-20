@@ -15,35 +15,36 @@ import static com.movies.mmdb.util.ApplicationConstants.MAX_PAGE_SIZE;
  */
 public interface ValidatingRequestParameters {
 
-    /**
-     * Check if the size and the page number parameters are valid.
-     * <p>
-     * The page number should accept integer only, and should be greater than 0.<br>
-     * The size should be an integer, and should be between 0 and
-     * {@link com.movies.mmdb.util.ApplicationConstants#MAX_PAGE_SIZE}
-     * @param page the page number
-     * @param size the size of each page
-     */
-    static void validatePageNumberAndSize(String page, String size) {
+    static void parameterShouldBeInteger(String parameterName, String parameterValue) {
         try {
-            int PageInt = Integer.parseInt(page);
-            if(PageInt < 0) {
-                throw new BadRequestException("Page number cannot be less than zero.");
-            }
+            Integer.parseInt(parameterValue);
         } catch (NumberFormatException ex) {
-            throw new BadRequestException("Page parameter accept integer only, '" + page + "' is not an integer.");
+            throw new BadRequestException(parameterName + " parameter accept integers only, '" + parameterValue + "' is not an integer.");
         }
+    }
 
+    static void parameterShouldBeNumber(String parameterName, String parameterValue) {
         try {
-            int sizeInt = Integer.parseInt(size);
-            if(sizeInt > MAX_PAGE_SIZE ) {
-                throw new BadRequestException("Page size must not be greater than " + MAX_PAGE_SIZE + ".");
-            }
-            if(sizeInt < 0) {
-                throw new BadRequestException("Page size must not be lower than 0.");
-            }
+            Float.parseFloat(parameterValue);
         } catch (NumberFormatException ex) {
-            throw new BadRequestException("size parameter accept integer only, '" + size + "' is not an integer.");
+            throw new BadRequestException(parameterName + " parameter accept numbers only, '" + parameterValue + "' is not a number.");
+        }
+    }
+
+    static void validatePageSizeParameter(String size) {
+        int sizeInt = Integer.parseInt(size);
+        if(sizeInt > MAX_PAGE_SIZE ) {
+            throw new BadRequestException("Page size must not be greater than " + MAX_PAGE_SIZE + ".");
+        }
+        if(sizeInt < 0) {
+            throw new BadRequestException("Page size must not be lower than 0.");
+        }
+    }
+
+    static void validatePageNumberParameter(String page) {
+        int PageInt = Integer.parseInt(page);
+        if(PageInt < 0) {
+            throw new BadRequestException("Page number cannot be less than zero.");
         }
     }
 
@@ -79,20 +80,6 @@ public interface ValidatingRequestParameters {
 
         if(!direction.equalsIgnoreCase("asc") && !direction.equalsIgnoreCase("desc")) {
             throw new BadRequestException("The direction parameter can be 'asc' or 'desc'.");
-        }
-    }
-
-    /**
-     * Check if the id parameter is valid.
-     * <p>
-     * The id should be an integer, otherwise <code>BadRequestException</code> will be thrown
-     * @param requestId the id field
-     */
-    static void validateId(String requestId) {
-        try {
-            Integer.parseInt(requestId);
-        } catch (NumberFormatException ex) {
-            throw new BadRequestException("size parameter accept integer only, '" + requestId + "' is not an integer.");
         }
     }
 }

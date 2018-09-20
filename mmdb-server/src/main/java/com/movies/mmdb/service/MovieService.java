@@ -35,4 +35,21 @@ public interface MovieService {
      * @return a movie
      */
     MovieResponse getMovieById(String id);
+
+    /**
+     * This method will call {@link com.movies.mmdb.repository.MovieRepository#findByNameContainingAndRatingBetweenAndReleaseDateBetween(String, float, float, java.util.Date, java.util.Date, org.springframework.data.domain.Pageable)}
+     * method and get a page of movies based tn the criteria given.
+     * @param name the name of the movie, or just a part of the name.
+     * @param minRating the minimum rating of the movie.
+     * @param MaxRating the maximum rating of the movie.
+     * @param fromDate the movies from this date.
+     * @param toDate the movies to this date
+     * @param page the page number.
+     * @param size the size of a single page.
+     * @param sort the sort of a page.
+     * @param direction the direction of the sort.
+     * @return a PagedResponse of movies if there's any movies found, otherwise an empty page will be in return.
+     */
+    PagedResponse<MovieResponse> getMoviesByCriteria(String name, String minRating, String MaxRating, String fromDate, String toDate,
+                                                     String page, String size, String sort, String direction);
 }
