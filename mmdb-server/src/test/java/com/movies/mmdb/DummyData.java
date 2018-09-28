@@ -1,5 +1,6 @@
 package com.movies.mmdb;
 
+import com.movies.mmdb.dto.MovieMediaResponse;
 import com.movies.mmdb.dto.MovieResponse;
 import com.movies.mmdb.model.*;
 import com.movies.mmdb.service.impl.MovieServiceImpl;
@@ -47,16 +48,8 @@ public final class DummyData {
         return movie;
     }
 
-    public static Genre dummyGenre() {
-        return new Genre(1L, "Drama");
-    }
-
-    public static MovieCelebrity dummyMovieCelebrity() {
-        return new MovieCelebrity(1L, true, CelebrityRole.ACTOR, "Tony Montana", dummyCelebrity());
-    }
-
-    public static Celebrity dummyCelebrity() {
-        return new Celebrity(1L, "Al Pacino", "photo1.png", new Date(1940), "");
+    public static MovieResponse dummyMovieResponse() {
+        return DTOModelMapper.mapMovieToMovieResponse(dummyMovie());
     }
 
     public static Page<Movie> dummyMoviePage() {
@@ -70,7 +63,30 @@ public final class DummyData {
                 dummyMoviePage().getTotalElements(), dummyMoviePage().getTotalPages(), dummyMoviePage().isLast());
     }
 
-    public static MovieResponse dummyMovieResponse() {
-        return DTOModelMapper.mapMovieToMovieResponse(dummyMovie());
+    public static Genre dummyGenre() {
+        return new Genre(1L, "Drama");
+    }
+
+    public static MovieCelebrity dummyMovieCelebrity() {
+        return new MovieCelebrity(1L, true, CelebrityRole.ACTOR, "Tony Montana", dummyCelebrity());
+    }
+
+    public static Celebrity dummyCelebrity() {
+        return new Celebrity(1L, "Al Pacino", "photo1.png", null, null);
+    }
+
+    public static MovieMedia dummyMovieMedia() {
+        return new MovieMedia(1L, "photo.png", MediaType.PHOTO);
+    }
+
+    public static Page<MovieMedia> dummyMovieMediaPage() {
+        List<MovieMedia> movieMediaList = new ArrayList<>(Collections.singletonList(dummyMovieMedia()));
+        return new PageImpl<>(movieMediaList);
+    }
+
+    public static PagedResponse<MovieMediaResponse> dummyPagedMovieMediaResponse() {
+        List<MovieMediaResponse> movieMediaResponseList = dummyMovieMediaPage().map(DTOModelMapper::mapMovieMediaToMovieMediaResponse).getContent();
+        return new PagedResponse<>(movieMediaResponseList, dummyMoviePage().getNumber(), dummyMoviePage().getSize(),
+                dummyMoviePage().getTotalElements(), dummyMoviePage().getTotalPages(), dummyMoviePage().isLast());
     }
 }

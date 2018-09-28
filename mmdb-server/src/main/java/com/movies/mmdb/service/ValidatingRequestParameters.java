@@ -82,4 +82,10 @@ public interface ValidatingRequestParameters {
             throw new BadRequestException("The direction parameter can be 'asc' or 'desc'.");
         }
     }
+
+    static void validateMediaTypeParameter(String type) {
+        if(!type.equalsIgnoreCase("photo") && !type.equalsIgnoreCase("video")) {
+            throw new BadRequestException("The type of the media should e either 'photo' or 'video'");
+        }
+    }
 }

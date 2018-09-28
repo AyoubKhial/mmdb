@@ -1,7 +1,9 @@
 package com.movies.mmdb.util;
 
+import com.movies.mmdb.dto.MovieMediaResponse;
 import com.movies.mmdb.dto.MovieResponse;
 import com.movies.mmdb.model.Movie;
+import com.movies.mmdb.model.MovieMedia;
 import org.modelmapper.ModelMapper;
 
 /**
@@ -21,8 +23,8 @@ import org.modelmapper.ModelMapper;
 public interface DTOModelMapper {
 
     /**
-     * Map a <code>movie</code> to a <code>MovieResponse</code> using <code>ModelMapper</code> library.
-     * @param movie a movie Object we want to map DTO from.
+     * Map a <code>Movie</code> to a <code>MovieResponse</code> using <code>ModelMapper</code> library.
+     * @param movie a Movie Object we want to map DTO from.
      * @return the generated <code>MovieResponse</code> from <code>Movie</code>.
      * @see Movie
      * @see MovieResponse
@@ -30,5 +32,17 @@ public interface DTOModelMapper {
     static MovieResponse mapMovieToMovieResponse(Movie movie) {
         ModelMapper modelMapper = new ModelMapper();
         return modelMapper.map(movie, MovieResponse.class);
+    }
+
+    /**
+     * Map a <code>MovieMedia</code> to a <code>MovieMediaResponse</code> using <code>ModelMapper</code> library.
+     * @param movieMedia a MovieMedia Object we want to map DTO from.
+     * @return the generated <code>MovieMediaResponse</code> from <code>Movie</code>.
+     * @see MovieMedia
+     * @see MovieMediaResponse
+     */
+    static MovieMediaResponse mapMovieMediaToMovieMediaResponse(MovieMedia movieMedia) {
+        ModelMapper modelMapper = new ModelMapper();
+        return modelMapper.map(movieMedia, MovieMediaResponse.class);
     }
 }
