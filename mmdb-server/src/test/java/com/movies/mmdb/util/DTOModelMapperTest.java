@@ -1,6 +1,7 @@
 package com.movies.mmdb.util;
 
 import com.movies.mmdb.DummyData;
+import com.movies.mmdb.dto.CelebrityResponse;
 import com.movies.mmdb.dto.MovieMediaResponse;
 import com.movies.mmdb.dto.MovieResponse;
 import com.movies.mmdb.dto.MovieReviewResponse;
@@ -46,6 +47,14 @@ public class DTOModelMapperTest {
         this.errorCollector.checkThat("Mismatch review title", movieReviewResponse.getTitle(), is(equalTo("Amazing movie.")));
         this.errorCollector.checkThat("Mismatch review text", movieReviewResponse.getText(), is(equalTo("The best performance by AlPacino")));
         this.errorCollector.checkThat("Mismatch review user's username", movieReviewResponse.getUser().getUsername(), is(equalTo("Ayoub")));
+    }
 
+    @Test
+    public void mapCelebrityToCelebrityResponse() {
+        CelebrityResponse celebrityResponse = DTOModelMapper.mapCelebrityToCelebrityResponse(DummyData.dummyCelebrity());
+
+        this.errorCollector.checkThat("The celebrity id should be 1", celebrityResponse.getId(), is(equalTo(1L)));
+        this.errorCollector.checkThat("Mismatch celebrity name", celebrityResponse.getName(), is(equalTo("Al Pacino")));
+        this.errorCollector.checkThat("Mismatch celebrity photo", celebrityResponse.getPicture(), is(equalTo("photo1.png")));
     }
 }

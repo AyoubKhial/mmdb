@@ -61,4 +61,16 @@ public interface DTOModelMapper {
         ModelMapper modelMapper = new ModelMapper();
         return modelMapper.map(movieReview, MovieReviewResponse.class);
     }
+
+    /**
+     * Map a <code>Celebrity</code> to a <code>CelebrityResponse</code> using <code>ModelMapper</code> library.
+     * @param celebrity a Celebrity Object we want to map DTO from.
+     * @return the generated <code>CelebrityResponse</code> from <code>Celebrity</code>.
+     * @see Celebrity
+     * @see CelebrityResponse
+     */
+    static CelebrityResponse mapCelebrityToCelebrityResponse(Celebrity celebrity) {
+        ModelMapper modelMapper = new ModelMapper();
+        return modelMapper.map(celebrity, CelebrityResponse.class);
+    }
 }

@@ -1,5 +1,6 @@
 package com.movies.mmdb;
 
+import com.movies.mmdb.dto.CelebrityResponse;
 import com.movies.mmdb.dto.MovieMediaResponse;
 import com.movies.mmdb.dto.MovieResponse;
 import com.movies.mmdb.dto.MovieReviewResponse;
@@ -72,10 +73,6 @@ public final class DummyData {
         return new MovieCelebrity(1L, true, CelebrityRole.ACTOR, "Tony Montana", dummyCelebrity());
     }
 
-    public static Celebrity dummyCelebrity() {
-        return new Celebrity(1L, "Al Pacino", "photo1.png", null, null);
-    }
-
     public static MovieMedia dummyMovieMedia() {
         return new MovieMedia(1L, "photo.png", MediaType.PHOTO);
     }
@@ -118,5 +115,20 @@ public final class DummyData {
 
     public static User dummyUser() {
         return new User(1L, "Ayoub", "Ayoub@gmail.com", "Ayoub", "Khial", "123456", "picture.png");
+    }
+
+    public static Celebrity dummyCelebrity() {
+        return new Celebrity(1L, "Al Pacino", "photo1.png", null, null);
+    }
+
+    public static Page<Celebrity> dummyCelebrityPage() {
+        List<Celebrity> celebrityList = new ArrayList<>(Collections.singletonList(dummyCelebrity()));
+        return new PageImpl<>(celebrityList);
+    }
+
+    public static PagedResponse<CelebrityResponse> dummyPagedCelebrityResponse() {
+        List<CelebrityResponse> celebrityResponseList = dummyCelebrityPage().map(DTOModelMapper::mapCelebrityToCelebrityResponse).getContent();
+        return new PagedResponse<>(celebrityResponseList, dummyCelebrityPage().getNumber(), dummyCelebrityPage().getSize(),
+                dummyCelebrityPage().getTotalElements(), dummyCelebrityPage().getTotalPages(), dummyCelebrityPage().isLast());
     }
 }
