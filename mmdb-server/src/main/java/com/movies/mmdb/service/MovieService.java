@@ -54,7 +54,7 @@ public interface MovieService {
                                                      String page, String size, String sort, String direction);
 
     /**
-     * This method will call {@link com.movies.mmdb.repository.MovieRepository#findRelatedMoviesToAMovieById(int, org.springframework.data.domain.Pageable)}
+     * This method will call {@link com.movies.mmdb.repository.MovieRepository#findRelatedMoviesToAMovieById(Long, org.springframework.data.domain.Pageable)}
      * method and get a page of movies related to the given movie.
      * @param id the id of the movie.
      * @param page the page number.

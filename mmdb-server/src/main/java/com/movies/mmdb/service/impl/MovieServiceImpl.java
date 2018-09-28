@@ -85,6 +85,12 @@ public class MovieServiceImpl implements MovieService {
                 () -> new ResourceNotFoundException("movie", "id", movieId)
         );
 
+        // Remove useless information about celebrities
+        movie.getMovieCelebrities().forEach(movieCelebrity -> {
+            movieCelebrity.getCelebrity().setBiography(null);
+            movieCelebrity.getCelebrity().setDateOfBirth(null);
+        });
+
         // map the movie to a movie response and return it
         return DTOModelMapper.mapMovieToMovieResponse(movie);
     }
@@ -184,22 +190,20 @@ public class MovieServiceImpl implements MovieService {
     }
 
     /**
-     * Remove som unnecessarily fields to keep the response clean.
+     * Remove some unnecessary fields to keep the response clean.
      * <p>
      * In the case where the client request for a list of movies we can't respond with all the information for
      * each movie, for that we remove certain unnecessarily fields and return just a summarizing response
      * @param moviePage the page we want to remove the fields from
      */
     public static Page<Movie> removeUndesirableFields(Page<Movie> moviePage) {
-        moviePage.getContent().forEach(movie -> {
-            movie.getMovieReviews().clear();
-            movie.getMovieMedia().clear();
+        moviePage.getContent().forEach(movie ->
             movie.getMovieCelebrities().forEach(movieCelebrity -> {
                 movieCelebrity.getCelebrity().setBiography(null);
                 movieCelebrity.getCelebrity().setPicture(null);
                 movieCelebrity.getCelebrity().setDateOfBirth(null);
-            });
-        });
+            })
+        );
         return moviePage;
     }
 }

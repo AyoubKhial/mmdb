@@ -1,7 +1,6 @@
 package com.movies.mmdb.dto;
 
 import com.movies.mmdb.model.CelebrityRole;
-import com.movies.mmdb.model.MediaType;
 import org.junit.*;
 import org.junit.rules.ErrorCollector;
 
@@ -44,25 +43,6 @@ public class MovieResponseTest {
         this.errorCollector.checkThat("The size of cast list should be 1.", this.movieResponse.getCast(), hasSize(1));
         this.errorCollector.checkThat("The size of directors list should be 1.", this.movieResponse.getDirectors(), hasSize(1));
         this.errorCollector.checkThat("The size of writers list should be 1.", this.movieResponse.getWriters(), hasSize(1));
-    }
-
-    @Test
-    public void testSetMovieMedia_MovieMediaResponseList_ShouldDivideTheList() {
-        MovieMediaResponse movieMediaResponse = new MovieMediaResponse();
-        movieMediaResponse.setType(MediaType.PHOTO);
-        MovieMediaResponse movieMediaResponse1 = new MovieMediaResponse();
-        movieMediaResponse1.setType(MediaType.VIDEO);
-
-        List<MovieMediaResponse> movieMediaResponses = new ArrayList<>(
-                Arrays.asList(
-                        movieMediaResponse,
-                        movieMediaResponse1
-                )
-        );
-
-        this.movieResponse.setMovieMedia(movieMediaResponses);
-        this.errorCollector.checkThat("The size of photo list should be 1.", this.movieResponse.getPhotos(), hasSize(1));
-        this.errorCollector.checkThat("The size of video list should be 1.", this.movieResponse.getVideos(), hasSize(1));
     }
 
     @After

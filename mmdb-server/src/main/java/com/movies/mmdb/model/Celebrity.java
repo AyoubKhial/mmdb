@@ -4,9 +4,7 @@ import com.movies.mmdb.model.audit.DateAudit;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
 /**
  * <code>Celebrity</code> class is a domain model class that contains the information of a single Celebrity entry
@@ -23,8 +21,6 @@ public class Celebrity extends DateAudit {
     private String picture;
     private Date dateOfBirth;
     private String biography;
-    private Set<CelebrityMedia> celebrityMedia = new HashSet<>();
-    private Set<MovieCelebrity> movieCelebrities = new HashSet<>();
 
     public Celebrity() {}
 
@@ -82,24 +78,6 @@ public class Celebrity extends DateAudit {
         this.biography = biography;
     }
 
-    @OneToMany(mappedBy = "celebrity", cascade = CascadeType.ALL, orphanRemoval = true)
-    public Set<CelebrityMedia> getCelebrityMedia() {
-        return celebrityMedia;
-    }
-
-    public void setCelebrityMedia(Set<CelebrityMedia> celebrityMedia) {
-        this.celebrityMedia = celebrityMedia;
-    }
-
-    @OneToMany(mappedBy = "celebrity", cascade = CascadeType.ALL, orphanRemoval = true)
-    public Set<MovieCelebrity> getMovieCelebrities() {
-        return movieCelebrities;
-    }
-
-    public void setMovieCelebrities(Set<MovieCelebrity> movieCelebrities) {
-        this.movieCelebrities = movieCelebrities;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -109,13 +87,11 @@ public class Celebrity extends DateAudit {
                 Objects.equals(name, celebrity.name) &&
                 Objects.equals(picture, celebrity.picture) &&
                 Objects.equals(dateOfBirth, celebrity.dateOfBirth) &&
-                Objects.equals(biography, celebrity.biography) &&
-                Objects.equals(celebrityMedia, celebrity.celebrityMedia) &&
-                Objects.equals(movieCelebrities, celebrity.movieCelebrities);
+                Objects.equals(biography, celebrity.biography);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, picture, dateOfBirth, biography, celebrityMedia, movieCelebrities);
+        return Objects.hash(id, name, picture, dateOfBirth, biography);
     }
 }

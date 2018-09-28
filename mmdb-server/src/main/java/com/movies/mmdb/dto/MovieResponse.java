@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.movies.mmdb.model.CelebrityRole;
-import com.movies.mmdb.model.MediaType;
 
 import java.sql.Time;
 import java.util.*;
@@ -35,10 +34,6 @@ public class MovieResponse {
     private String rated;
     private Date createdAt;
     private List<GenreResponse> genres = new ArrayList<>();
-    private List<MovieMediaResponse> movieMedia = new ArrayList<>();
-    private List<MovieMediaResponse> videos = new ArrayList<>();
-    private List<MovieMediaResponse> photos = new ArrayList<>();
-    private List<MovieReviewResponse> reviews = new ArrayList<>();
     private List<MovieCelebrityResponse> celebrities = new ArrayList<>();
     private List<MovieCelebrityResponse> cast = new ArrayList<>();
     private List<MovieCelebrityResponse> writers = new ArrayList<>();
@@ -128,58 +123,6 @@ public class MovieResponse {
     }
 
     @JsonIgnore
-    public List<MovieMediaResponse> getMovieMedia() {
-        return movieMedia;
-    }
-
-    /**
-     * Divide the list of media given as a parameter into two list based on the type of the media.
-     * <p>
-     * If the type of the media is <b>PHOTO</b> we set this media to <code>photos</code> attribute using
-     * <code>setPhotos</code> method; else if the type is <b>VIDEO</b> we set this media to <code>videos</code>
-     * attribute using <code>setVideos</code> method.
-     * @param movieMedias the list of media.
-     * @see MediaType
-     */
-    public void setMovieMedia(List<MovieMediaResponse> movieMedias) {
-        // partitioning the list based on the media type
-        Map<Boolean, List<MovieMediaResponse>> medias = movieMedias
-                .stream()
-                .collect(Collectors.partitioningBy(s -> s.getType().equals(MediaType.PHOTO)));
-
-        // get each type, true => PHOTO, false => VIDEO
-        this.setPhotos(medias.get(true));
-        this.setVideos(medias.get(false));
-    }
-
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    public List<MovieMediaResponse> getVideos() {
-        return videos;
-    }
-
-    public void setVideos(List<MovieMediaResponse> videos) {
-        this.videos = videos;
-    }
-
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    public List<MovieMediaResponse> getPhotos() {
-        return photos;
-    }
-
-    public void setPhotos(List<MovieMediaResponse> photos) {
-        this.photos = photos;
-    }
-
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    public List<MovieReviewResponse> getReviews() {
-        return reviews;
-    }
-
-    public void setReviews(List<MovieReviewResponse> reviews) {
-        this.reviews = reviews;
-    }
-
-    @JsonIgnore
     public List<MovieCelebrityResponse> getCelebrities() {
         return celebrities;
     }
@@ -244,10 +187,6 @@ public class MovieResponse {
                 Objects.equals(rated, that.rated) &&
                 Objects.equals(createdAt, that.createdAt) &&
                 Objects.equals(genres, that.genres) &&
-                Objects.equals(movieMedia, that.movieMedia) &&
-                Objects.equals(videos, that.videos) &&
-                Objects.equals(photos, that.photos) &&
-                Objects.equals(reviews, that.reviews) &&
                 Objects.equals(celebrities, that.celebrities) &&
                 Objects.equals(cast, that.cast) &&
                 Objects.equals(writers, that.writers) &&
@@ -256,6 +195,6 @@ public class MovieResponse {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, releaseDate, runtime, rating, storyline, poster, rated, createdAt, genres, movieMedia, videos, photos, reviews, celebrities, cast, writers, directors);
+        return Objects.hash(id, name, releaseDate, runtime, rating, storyline, poster, rated, createdAt, genres, celebrities, cast, writers, directors);
     }
 }

@@ -29,8 +29,6 @@ public class Movie extends DateAudit  {
     private String poster;
     private String rated;
     private List<Genre> genres = new ArrayList<>();
-    private List<MovieMedia> movieMedia = new ArrayList<>();
-    private List<MovieReview> movieReviews = new ArrayList<>();
     private List<MovieCelebrity> movieCelebrities = new ArrayList<>();
 
     public Movie() {}
@@ -56,8 +54,6 @@ public class Movie extends DateAudit  {
         this.poster = movie.poster;
         this.rated = movie.rated;
         this.genres = movie.genres;
-        this.movieMedia = movie.movieMedia;
-        this.movieReviews = movie.movieReviews;
         this.movieCelebrities = movie.movieCelebrities;
     }
 
@@ -149,24 +145,6 @@ public class Movie extends DateAudit  {
     }
 
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
-    public List<MovieMedia> getMovieMedia() {
-        return movieMedia;
-    }
-
-    public void setMovieMedia(List<MovieMedia> movieMedia) {
-        this.movieMedia = movieMedia;
-    }
-
-    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
-    public List<MovieReview> getMovieReviews() {
-        return movieReviews;
-    }
-
-    public void setMovieReviews(List<MovieReview> movieReviews) {
-        this.movieReviews = movieReviews;
-    }
-
-    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
     public List<MovieCelebrity> getMovieCelebrities() {
         return movieCelebrities;
     }
@@ -189,13 +167,11 @@ public class Movie extends DateAudit  {
                 Objects.equals(poster, movie.poster) &&
                 Objects.equals(rated, movie.rated) &&
                 Objects.equals(genres, movie.genres) &&
-                Objects.equals(movieMedia, movie.movieMedia) &&
-                Objects.equals(movieReviews, movie.movieReviews) &&
                 Objects.equals(movieCelebrities, movie.movieCelebrities);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, releaseDate, runtime, rating, storyline, poster, rated, genres, movieMedia, movieReviews, movieCelebrities);
+        return Objects.hash(id, name, releaseDate, runtime, rating, storyline, poster, rated, genres, movieCelebrities);
     }
 }

@@ -42,8 +42,6 @@ public final class DummyData {
         Movie movie = new Movie(1L, "Scarface", movieDate, movieTime, 8.3F,
                 "This is the storyline.", "picture.png", "R");
         movie.setGenres(new ArrayList<>(Collections.singletonList(dummyGenre())));
-        movie.setMovieMedia(new ArrayList<>(Collections.singletonList(dummyMovieMedia())));
-        movie.setMovieReviews(new ArrayList<>(Collections.singletonList(dummyMovieReview())));
         movie.setMovieCelebrities(new ArrayList<>(Collections.singletonList(dummyMovieCelebrity())));
         movie.setCreatedAt(movieDate);
         return movie;
@@ -51,14 +49,6 @@ public final class DummyData {
 
     public static Genre dummyGenre() {
         return new Genre(1L, "Drama");
-    }
-
-    public static MovieMedia dummyMovieMedia() {
-        return new MovieMedia(1L, "photo1.jpg", MediaType.PHOTO);
-    }
-
-    public static MovieReview dummyMovieReview() {
-        return new MovieReview(1L, 10, "Amazing movie", "Best movie ever.");
     }
 
     public static MovieCelebrity dummyMovieCelebrity() {
