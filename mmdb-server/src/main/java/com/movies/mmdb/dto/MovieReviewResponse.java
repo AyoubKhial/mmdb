@@ -1,5 +1,6 @@
 package com.movies.mmdb.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.util.Date;
@@ -24,7 +25,9 @@ public class MovieReviewResponse {
     private String title;
     private String text;
     private Date createdAt;
+    private Date updatedAt;
     private UserResponse user;
+    private MovieResponse movie;
 
     public Integer getRating() {
         return rating;
@@ -52,6 +55,7 @@ public class MovieReviewResponse {
         this.text = text;
     }
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     public Date getCreatedAt() {
         return createdAt;
     }
@@ -60,12 +64,31 @@ public class MovieReviewResponse {
         this.createdAt = createdAt;
     }
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public UserResponse getUser() {
         return user;
     }
 
     public void setUser(UserResponse user) {
         this.user = user;
+    }
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public MovieResponse getMovie() {
+        return movie;
+    }
+
+    public void setMovie(MovieResponse movie) {
+        this.movie = movie;
     }
 
     @Override
@@ -77,11 +100,12 @@ public class MovieReviewResponse {
                 Objects.equals(title, that.title) &&
                 Objects.equals(text, that.text) &&
                 Objects.equals(createdAt, that.createdAt) &&
-                Objects.equals(user, that.user);
+                Objects.equals(user, that.user) &&
+                Objects.equals(movie, that.movie);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(rating, title, text, createdAt, user);
+        return Objects.hash(rating, title, text, createdAt, user, movie);
     }
 }

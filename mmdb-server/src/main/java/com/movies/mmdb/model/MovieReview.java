@@ -5,6 +5,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.Objects;
 
 /**
@@ -30,11 +31,12 @@ public class MovieReview extends DateAudit {
 
     public MovieReview() {}
 
-    public MovieReview(Long id, Integer rating, String title, String text) {
-        this.id = id;
+    public MovieReview(Integer rating, String title, String text, User user, Date createdAt, Date updatedAt) {
+        super(createdAt, updatedAt);
         this.rating = rating;
         this.title = title;
         this.text = text;
+        this.user = user;
     }
 
     @Id

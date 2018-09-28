@@ -1,9 +1,13 @@
 package com.movies.mmdb.util;
 
+import com.movies.mmdb.dto.CelebrityResponse;
 import com.movies.mmdb.dto.MovieMediaResponse;
 import com.movies.mmdb.dto.MovieResponse;
+import com.movies.mmdb.dto.MovieReviewResponse;
+import com.movies.mmdb.model.Celebrity;
 import com.movies.mmdb.model.Movie;
 import com.movies.mmdb.model.MovieMedia;
+import com.movies.mmdb.model.MovieReview;
 import org.modelmapper.ModelMapper;
 
 /**
@@ -37,12 +41,24 @@ public interface DTOModelMapper {
     /**
      * Map a <code>MovieMedia</code> to a <code>MovieMediaResponse</code> using <code>ModelMapper</code> library.
      * @param movieMedia a MovieMedia Object we want to map DTO from.
-     * @return the generated <code>MovieMediaResponse</code> from <code>Movie</code>.
+     * @return the generated <code>MovieMediaResponse</code> from <code>MovieMedia</code>.
      * @see MovieMedia
      * @see MovieMediaResponse
      */
     static MovieMediaResponse mapMovieMediaToMovieMediaResponse(MovieMedia movieMedia) {
         ModelMapper modelMapper = new ModelMapper();
         return modelMapper.map(movieMedia, MovieMediaResponse.class);
+    }
+
+    /**
+     * Map a <code>MovieReview</code> to a <code>MovieReviewResponse</code> using <code>ModelMapper</code> library.
+     * @param movieReview a MovieReview Object we want to map DTO from.
+     * @return the generated <code>MovieReviewResponse</code> from <code>MovieReview</code>.
+     * @see MovieReview
+     * @see MovieReviewResponse
+     */
+    static MovieReviewResponse mapMovieReviewToMovieReviewResponse(MovieReview movieReview) {
+        ModelMapper modelMapper = new ModelMapper();
+        return modelMapper.map(movieReview, MovieReviewResponse.class);
     }
 }

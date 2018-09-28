@@ -40,6 +40,13 @@ public abstract class DateAudit implements Serializable {
     private Date createdAt;
     private Date updatedAt;
 
+    public DateAudit() { }
+
+    public DateAudit(Date createdAt, Date updatedAt) {
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
+
     @CreatedDate
     @Column(nullable = false, updatable = false, columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     public Date getCreatedAt() {

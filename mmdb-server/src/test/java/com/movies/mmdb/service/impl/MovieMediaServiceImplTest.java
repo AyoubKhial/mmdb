@@ -28,7 +28,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
-public class MovieMediaServieImplTest {
+public class MovieMediaServiceImplTest {
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
@@ -52,7 +52,7 @@ public class MovieMediaServieImplTest {
     }
 
     @Test
-    public void getAllMediaOfMovie_CriteriaAndPageableGiven_ShouldReturnPagedMovieResponse() {
+    public void getAllMediaOfMovie_CriteriaAndPageableGiven_ShouldReturnPagedMovieMediaResponse() {
         when(this.movieMediaRepository.findByTypeAndMovieId(any(MediaType.class), anyLong(), any(PageRequest.class)))
                 .thenReturn(this.movieMediaPage);
 
@@ -66,10 +66,10 @@ public class MovieMediaServieImplTest {
         when(this.movieMediaRepository.findByTypeAndMovieId(any(MediaType.class), anyLong(), any(PageRequest.class)))
                 .thenReturn(new PageImpl<>(new ArrayList<>()));
 
-        PagedResponse<MovieMediaResponse> actualPagedMovieResponse = this.movieMediaService.getAllMediaOfMovie("video", "1", "0", "5", "createdAt", "asc");
+        PagedResponse<MovieMediaResponse> actualPagedMovieMediaResponse = this.movieMediaService.getAllMediaOfMovie("video", "1", "0", "5", "createdAt", "asc");
 
-        PagedResponse<MovieMediaResponse> expectedMovieResponsePage = new PagedResponse<>(Collections.emptyList(), 0, 0, 0, 1, true);
+        PagedResponse<MovieMediaResponse> expectedMovieMediaResponsePage = new PagedResponse<>(Collections.emptyList(), 0, 0, 0, 1, true);
 
-        assertThat("The actual response is different than the expected.", actualPagedMovieResponse, is(equalTo(expectedMovieResponsePage)));
+        assertThat("The actual response is different than the expected.", actualPagedMovieMediaResponse, is(equalTo(expectedMovieMediaResponsePage)));
     }
 }

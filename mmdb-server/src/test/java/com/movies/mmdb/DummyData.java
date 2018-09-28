@@ -2,6 +2,7 @@ package com.movies.mmdb;
 
 import com.movies.mmdb.dto.MovieMediaResponse;
 import com.movies.mmdb.dto.MovieResponse;
+import com.movies.mmdb.dto.MovieReviewResponse;
 import com.movies.mmdb.model.*;
 import com.movies.mmdb.service.impl.MovieServiceImpl;
 import com.movies.mmdb.util.DTOModelMapper;
@@ -86,7 +87,36 @@ public final class DummyData {
 
     public static PagedResponse<MovieMediaResponse> dummyPagedMovieMediaResponse() {
         List<MovieMediaResponse> movieMediaResponseList = dummyMovieMediaPage().map(DTOModelMapper::mapMovieMediaToMovieMediaResponse).getContent();
-        return new PagedResponse<>(movieMediaResponseList, dummyMoviePage().getNumber(), dummyMoviePage().getSize(),
-                dummyMoviePage().getTotalElements(), dummyMoviePage().getTotalPages(), dummyMoviePage().isLast());
+        return new PagedResponse<>(movieMediaResponseList, dummyMovieMediaPage().getNumber(), dummyMovieMediaPage().getSize(),
+                dummyMovieMediaPage().getTotalElements(), dummyMovieMediaPage().getTotalPages(), dummyMovieMediaPage().isLast());
+    }
+
+    public static MovieReview dummyMovieReview() {
+        // create & updated date
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, 1983);
+        cal.set(Calendar.MONTH, Calendar.DECEMBER);
+        cal.set(Calendar.DAY_OF_MONTH, 9);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        Date reviewDate = cal.getTime();
+        return new MovieReview(10, "Amazing movie.", "The best performance by AlPacino", dummyUser(), reviewDate, reviewDate);
+    }
+
+    public static Page<MovieReview> dummyMovieReviewPage() {
+        List<MovieReview> movieReviewList = new ArrayList<>(Collections.singletonList(dummyMovieReview()));
+        return new PageImpl<>(movieReviewList);
+    }
+
+    public static PagedResponse<MovieReviewResponse> dummyPagedMovieReviewResponse() {
+        List<MovieReviewResponse> movieReviewResponseList = dummyMovieReviewPage().map(DTOModelMapper::mapMovieReviewToMovieReviewResponse).getContent();
+        return new PagedResponse<>(movieReviewResponseList, dummyMovieReviewPage().getNumber(), dummyMovieReviewPage().getSize(),
+                dummyMovieReviewPage().getTotalElements(), dummyMovieReviewPage().getTotalPages(), dummyMovieReviewPage().isLast());
+    }
+
+    public static User dummyUser() {
+        return new User(1L, "Ayoub", "Ayoub@gmail.com", "Ayoub", "Khial", "123456", "picture.png");
     }
 }

@@ -1,8 +1,8 @@
 package com.movies.mmdb.controller;
 
 import com.movies.mmdb.DummyData;
-import com.movies.mmdb.dto.MovieMediaResponse;
-import com.movies.mmdb.service.MovieMediaService;
+import com.movies.mmdb.dto.MovieReviewResponse;
+import com.movies.mmdb.service.MovieReviewService;
 import com.movies.mmdb.util.PagedResponse;
 import org.junit.After;
 import org.junit.Before;
@@ -28,39 +28,42 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(MovieMediaController.class)
-public class MovieMediaControllerTest {
-
+@WebMvcTest(MovieReviewController.class)
+public class MovieReviewControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private MovieMediaService movieMediaService;
+    private MovieReviewService movieReviewService;
 
-    private PagedResponse<MovieMediaResponse> pagedMovieMediaResponse;
+    private PagedResponse<MovieReviewResponse> pagedMovieReviewResponse;
 
     @Before
     public void setUp() {
-        this.pagedMovieMediaResponse = DummyData.dummyPagedMovieMediaResponse();
+        this.pagedMovieReviewResponse = DummyData.dummyPagedMovieReviewResponse();
     }
 
     @Test
-    public void getAllMediaOfMovie_CriteriaGiven_ShouldReturnPagedMovieMediaResponse() throws Exception {
-        given(this.movieMediaService.getAllMediaOfMovie(anyString(), anyString(), anyString(), anyString(), anyString(), anyString()))
-                .willReturn(this.pagedMovieMediaResponse);
+    public void getAllReviewOfMovie_CriteriaGiven_ShouldReturnPagedMovieReviewResponse() throws Exception {
+        given(this.movieReviewService.getAllReviewsOfMovie(anyString(), anyString(), anyString(), anyString(), anyString()))
+                .willReturn(this.pagedMovieReviewResponse);
 
-        mockMvc.perform(get("/api/movies/1/photo").accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/api/movies/1/reviews").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.content", hasSize(1)))
-                .andExpect(jsonPath("$.content[0].url", is("photo.png")));
+                .andExpect(jsonPath("$.content[0].rating", is(10)))
+                .andExpect(jsonPath("$.content[0].title", is("Amazing movie.")))
+                .andExpect(jsonPath("$.content[0].text", is("The best performance by AlPacino")))
+                .andExpect(jsonPath("$.content[0].createdAt", is("09-12-1983")))
+                .andExpect(jsonPath("$.content[0].updatedAt", is("09-12-1983")));
 
-        verify(this.movieMediaService, times(1)).getAllMediaOfMovie(anyString(), anyString(), anyString(), anyString(), anyString(), anyString());
-        verifyNoMoreInteractions(this.movieMediaService);
+        verify(this.movieReviewService, times(1)).getAllReviewsOfMovie(anyString(), anyString(), anyString(), anyString(), anyString());
+        verifyNoMoreInteractions(this.movieReviewService);
     }
 
     @After
     public void tearDown() {
-        this.pagedMovieMediaResponse = null;
+        this.pagedMovieReviewResponse = null;
     }
 }
