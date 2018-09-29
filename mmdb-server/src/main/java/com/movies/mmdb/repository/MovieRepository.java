@@ -1,5 +1,6 @@
 package com.movies.mmdb.repository;
 
+import com.movies.mmdb.model.CelebrityRole;
 import com.movies.mmdb.model.Movie;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -48,10 +49,16 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
      * @param pageable the page information.
      * @return a page of movies if there's any movies found, otherwise an empty page will be in return.
      */
-    @Query("SELECT m FROM Movie m JOIN m.genres mg " +
+    @Query("SELECT m " +
+            "FROM Movie m JOIN m.genres mg " +
             "WHERE mg.id IN " +
             "(SELECT g.id FROM Genre g JOIN g.movies gm WHERE gm.id = :id) " +
             "AND m.id <> :id " +
             "GROUP BY m ORDER BY count(m) DESC")
     Page<Movie> findRelatedMoviesToAMovieById(@Param("id") Long id, Pageable pageable);
+
+    @Query("SELECT new Movie(m.id, m.name, m.releaseDate) " +
+            "FROM Movie m JOIN m.movieCelebrities mc " +
+            "WHERE mc.celebrity.id = :id AND mc.role = :role")
+    Page<Movie> findMoviesByCelebrity(@Param("id") Long id, @Param("role") CelebrityRole role, Pageable pageable);
 }

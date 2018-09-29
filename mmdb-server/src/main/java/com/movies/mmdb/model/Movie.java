@@ -57,6 +57,12 @@ public class Movie extends DateAudit  {
         this.movieCelebrities = movie.movieCelebrities;
     }
 
+    public Movie(Long id, String name, Date releaseDate) {
+        this.id = id;
+        this.name = name;
+        this.releaseDate = releaseDate;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long getId() {

@@ -134,6 +134,38 @@ public class MovieServiceImplTest {
     }
 
     @Test
+    public void getMoviesByCelebrity_CriteriaGiven_ShouldReturnPagedMovieResponse() {
+        when(this.movieRepository.findMoviesByCelebrity(anyLong(), any(CelebrityRole.class), any(PageRequest.class)))
+                .thenReturn(this.moviePage);
+
+        PagedResponse<MovieResponse> actualPagedMovieResponse = this.movieService.getMoviesByCelebrity("1", "acted", "0", "1", "id","desc");
+
+        assertThat("The actual response is different than the expected.", actualPagedMovieResponse, is(equalTo(this.pagedMovieResponse)));
+    }
+
+    @Test
+    public void getMoviesByCelebrity_CriteriaGiven_ShouldReturnEmptyPagedMovieResponse() {
+        when(this.movieRepository.findMoviesByCelebrity(anyLong(), any(CelebrityRole.class), any(PageRequest.class)))
+                .thenReturn(new PageImpl<>(new ArrayList<>()));
+
+        PagedResponse<MovieResponse> actualPagedMovieResponse = this.movieService.getMoviesByCelebrity("1", "directed", "0", "1", "id","asc");
+
+        PagedResponse<MovieResponse> expectedMovieResponsePage = new PagedResponse<>(Collections.emptyList(), 0, 0, 0, 1, true);
+
+        assertThat("The actual response is different than the expected.", actualPagedMovieResponse, is(equalTo(expectedMovieResponsePage)));
+    }
+
+    @Test
+    public void getMoviesByCelebrity_CriteriaGivenWithWrittenAsRole_ShouldReturnPagedMovieResponse() {
+        when(this.movieRepository.findMoviesByCelebrity(anyLong(), any(CelebrityRole.class), any(PageRequest.class)))
+                .thenReturn(this.moviePage);
+
+        PagedResponse<MovieResponse> actualPagedMovieResponse = this.movieService.getMoviesByCelebrity("1", "written", "0", "1", "id","desc");
+
+        assertThat("The actual response is different than the expected.", actualPagedMovieResponse, is(equalTo(this.pagedMovieResponse)));
+    }
+
+    @Test
     public void removeUndesirableFields_PageGiven_ShouldRemoveUndesirableFields() {
         List<Movie> movieList = new ArrayList<>(Collections.singletonList(this.movie));
 

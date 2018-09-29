@@ -101,9 +101,20 @@ public class MovieController {
      */
     @GetMapping("/movies/{id}/related")
     public ResponseEntity<PagedResponse<MovieResponse>> getRelatedMovies(@PathVariable String id,
-                                                                            @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) String page,
-                                                                            @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) String size) {
+                                                                         @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) String page,
+                                                                         @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) String size) {
         PagedResponse<MovieResponse> movieResponsePage = this.movieService.getRelatedMovies(id, page, size);
+        return ResponseEntity.ok(movieResponsePage);
+    }
+
+    @GetMapping("/celebrities/{id}/{role}")
+    public ResponseEntity<PagedResponse<MovieResponse>> getMoviesByCelebrity(@PathVariable String id,
+                                                                             @PathVariable String role,
+                                                                             @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) String page,
+                                                                             @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) String size,
+                                                                             @RequestParam(value = "sort", defaultValue = "createdAt") String sort,
+                                                                             @RequestParam(value = "direction", defaultValue = "desc") String direction) {
+        PagedResponse<MovieResponse> movieResponsePage = this.movieService.getMoviesByCelebrity(id, role, page, size, sort, direction);
         return ResponseEntity.ok(movieResponsePage);
     }
 }

@@ -39,6 +39,7 @@ public class MovieResponse {
     private List<MovieCelebrityResponse> writers = new ArrayList<>();
     private List<MovieCelebrityResponse> directors = new ArrayList<>();
 
+
     public Long getId() {
         return id;
     }
@@ -56,6 +57,7 @@ public class MovieResponse {
     }
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public Date getReleaseDate() {
         return releaseDate;
     }
@@ -64,6 +66,7 @@ public class MovieResponse {
         this.releaseDate = releaseDate;
     }
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public Time getRuntime() {
         return runtime;
     }
@@ -72,6 +75,7 @@ public class MovieResponse {
         this.runtime = runtime;
     }
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public Float getRating() {
         return rating;
     }
@@ -80,6 +84,7 @@ public class MovieResponse {
         this.rating = rating;
     }
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public String getStoryline() {
         return storyline;
     }
@@ -97,6 +102,7 @@ public class MovieResponse {
         this.poster = poster;
     }
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public String getRated() {
         return rated;
     }
@@ -106,6 +112,7 @@ public class MovieResponse {
     }
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public Date getCreatedAt() {
         return createdAt;
     }
@@ -114,6 +121,7 @@ public class MovieResponse {
         this.createdAt = createdAt;
     }
 
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     public List<GenreResponse> getGenres() {
         return genres;
     }
@@ -148,6 +156,7 @@ public class MovieResponse {
         this.setWriters(celebrities.get(CelebrityRole.WRITER));
     }
 
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     public List<MovieCelebrityResponse> getCast() {
         return cast;
     }
@@ -156,6 +165,7 @@ public class MovieResponse {
         this.cast = cast;
     }
 
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     public List<MovieCelebrityResponse> getWriters() {
         return writers;
     }
@@ -164,6 +174,7 @@ public class MovieResponse {
         this.writers = writers;
     }
 
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     public List<MovieCelebrityResponse> getDirectors() {
         return directors;
     }

@@ -2,6 +2,7 @@ package com.movies.mmdb.service.impl;
 
 import com.movies.mmdb.dto.MovieResponse;
 import com.movies.mmdb.exception.ResourceNotFoundException;
+import com.movies.mmdb.model.CelebrityRole;
 import com.movies.mmdb.model.Movie;
 import com.movies.mmdb.repository.MovieRepository;
 import com.movies.mmdb.service.MovieService;
@@ -171,6 +172,61 @@ public class MovieServiceImpl implements MovieService {
 
         // get the movies as a page from the repository
         Page<Movie> moviePage = this.movieRepository.findRelatedMoviesToAMovieById(Long.parseLong(id), pageable);
+
+        // if the page is empty, return pagedResponse with empty list
+        if(moviePage.getNumberOfElements() == 0) {
+            return new PagedResponse<>(Collections.emptyList(), moviePage.getNumber(),
+                    moviePage.getSize(), moviePage.getTotalElements(), moviePage.getTotalPages(), moviePage.isLast());
+        }
+
+        // remove the undesirable fields from the page
+        removeUndesirableFields(moviePage);
+
+        // map the page into a list of movie DTO
+        List<MovieResponse> movieResponseList = moviePage.map(DTOModelMapper::mapMovieToMovieResponse).getContent();
+
+        // return the paged response
+        return new PagedResponse<>(movieResponseList, moviePage.getNumber(),
+                moviePage.getSize(), moviePage.getTotalElements(), moviePage.getTotalPages(), moviePage.isLast());
+    }
+
+    @Override
+    public PagedResponse<MovieResponse> getMoviesByCelebrity(String id, String role, String page, String size, String sort, String direction) {
+        // validate the request parameters
+        ValidatingRequestParameters.parameterShouldBeInteger("id", id);
+        ValidatingRequestParameters.validateCelebrityRoleParameter(role);
+        ValidatingRequestParameters.parameterShouldBeInteger("page", page);
+        ValidatingRequestParameters.parameterShouldBeInteger("size", size);
+        ValidatingRequestParameters.validatePageNumberParameter(page);
+        ValidatingRequestParameters.validatePageSizeParameter(size);
+        ValidatingRequestParameters.validateSortAndDirection(sort, direction, Movie.class);
+
+        // get the celebrity role from the arguments and convert it to celebrityRole
+        CelebrityRole celebrityRole;
+        if(role.equalsIgnoreCase("acted")) {
+            celebrityRole = CelebrityRole.ACTOR;
+        }
+        else if(role.equalsIgnoreCase("directed")) {
+            celebrityRole = CelebrityRole.DIRECTOR;
+        }
+        else {
+            celebrityRole = CelebrityRole.WRITER;
+        }
+
+        // get the sort direction from the arguments and convert it to Sort.Direction
+        Sort.Direction sortDirection;
+        if(direction.equalsIgnoreCase("asc")) {
+            sortDirection = Sort.Direction.ASC;
+        }
+        else {
+            sortDirection = Sort.Direction.DESC;
+        }
+
+        // create a pageable from the arguments
+        Pageable pageable = PageRequest.of(Integer.parseInt(page), Integer.parseInt(size), sortDirection, sort);
+
+        // get the movies as a page from the repository
+        Page<Movie> moviePage = this.movieRepository.findMoviesByCelebrity(Long.parseLong(id), celebrityRole, pageable);
 
         // if the page is empty, return pagedResponse with empty list
         if(moviePage.getNumberOfElements() == 0) {

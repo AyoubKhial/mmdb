@@ -62,4 +62,6 @@ public interface MovieService {
      * @return a PagedResponse of movies if there's any movies found, otherwise an empty page will be in return.
      */
     PagedResponse<MovieResponse> getRelatedMovies(String id, String page, String size);
+
+    PagedResponse<MovieResponse> getMoviesByCelebrity(String id, String role, String page, String size, String sort, String direction);
 }

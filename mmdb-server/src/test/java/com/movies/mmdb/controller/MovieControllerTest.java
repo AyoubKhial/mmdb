@@ -120,6 +120,23 @@ public class MovieControllerTest {
         verifyNoMoreInteractions(this.movieService);
     }
 
+    @Test
+    public void getMoviesByCelebrity_CriteriaGiven_ShouldReturnPagedMovieResponse() throws Exception {
+        given(this.movieService.getMoviesByCelebrity(anyString(), anyString(), anyString(), anyString(), anyString(), anyString()))
+                .willReturn(this.pagedMovieResponse);
+
+        mockMvc.perform(get("/api/celebrities/1/acted").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.content", hasSize(1)))
+                .andExpect(jsonPath("$.content[0].id", is(1)))
+                .andExpect(jsonPath("$.content[0].name", is("Scarface")))
+                .andExpect(jsonPath("$.content[0].releaseDate", is("09-12-1983")));
+
+        verify(this.movieService, times(1)).getMoviesByCelebrity(anyString(), anyString(), anyString(), anyString(), anyString(), anyString());
+        verifyNoMoreInteractions(this.movieService);
+    }
+
     @After
     public void tearDown() {
         this.pagedMovieResponse = null;

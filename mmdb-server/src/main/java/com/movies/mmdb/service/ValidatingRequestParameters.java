@@ -3,6 +3,7 @@ package com.movies.mmdb.service;
 import com.movies.mmdb.exception.BadRequestException;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.movies.mmdb.util.ApplicationConstants.MAX_PAGE_SIZE;
@@ -84,8 +85,14 @@ public interface ValidatingRequestParameters {
     }
 
     static void validateMediaTypeParameter(String type) {
-        if(!type.equalsIgnoreCase("photo") && !type.equalsIgnoreCase("video")) {
-            throw new BadRequestException("The type of the media should e either 'photo' or 'video'");
+        if(!Arrays.asList("photo", "video").contains(type.toLowerCase())) {
+            throw new BadRequestException("The type of the media should be either 'photo' or 'video'.");
+        }
+    }
+
+    static void validateCelebrityRoleParameter(String role) {
+        if(!Arrays.asList("acted", "written", "directed").contains(role.toLowerCase())) {
+            throw new BadRequestException("The role of the celebrity should be 'acted', 'directed' or 'written'.");
         }
     }
 }

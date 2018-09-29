@@ -62,8 +62,13 @@ public class ValidatingRequestParametersTest {
 
     @Test
     public void validateMediaTypeParameter_InvalidMediaType_ShouldThrowBadRequestException() {
-        this.expectedException.expectMessage("The type of the media should e either 'photo' or 'video'");
+        this.expectedException.expectMessage("The type of the media should be either 'photo' or 'video'.");
         ValidatingRequestParameters.validateMediaTypeParameter("movie");
     }
 
+    @Test
+    public void validateCelebrityRoleParameter_InvalidCelebrityRole_ShouldThrowBadRequestException() {
+        this.expectedException.expectMessage("The role of the celebrity should be 'acted', 'directed' or 'written'.");
+        ValidatingRequestParameters.validateCelebrityRoleParameter("produce");
+    }
 }
