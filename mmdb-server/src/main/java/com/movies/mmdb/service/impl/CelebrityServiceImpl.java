@@ -1,6 +1,7 @@
 package com.movies.mmdb.service.impl;
 
 import com.movies.mmdb.dto.CelebrityResponse;
+import com.movies.mmdb.exception.ResourceNotFoundException;
 import com.movies.mmdb.model.Celebrity;
 import com.movies.mmdb.repository.CelebrityRepository;
 import com.movies.mmdb.service.CelebrityService;
@@ -63,5 +64,18 @@ public class CelebrityServiceImpl implements CelebrityService {
         // return the paged response
         return new PagedResponse<>(celebrityResponseList, celebrityPage.getNumber(), celebrityPage.getSize(),
                 celebrityPage.getTotalElements(), celebrityPage.getTotalPages(), celebrityPage.isLast());
+    }
+
+    @Override
+    public CelebrityResponse getCelebrityById(String id) {
+        // get the celebrity with the given id if its exist, otherwise an exception will be thrown
+        ValidatingRequestParameters.parameterShouldBeNumber("id", id);
+        Long celebrityId = Long.valueOf(id);
+        Celebrity celebrity = this.celebrityRepository.findById(celebrityId).orElseThrow(
+                () -> new ResourceNotFoundException("celebrity", "id", celebrityId)
+        );
+
+        // map the celebrity to a celebrity response and return it
+        return DTOModelMapper.mapCelebrityToCelebrityResponse(celebrity);
     }
 }

@@ -37,10 +37,12 @@ public class CelebrityControllerTest {
     private CelebrityService celebrityService;
 
     private PagedResponse<CelebrityResponse> pagedCelebrityResponse;
+    private CelebrityResponse celebrityResponse;
 
     @Before
     public void setUp() {
         this.pagedCelebrityResponse = DummyData.dummyPagedCelebrityResponse();
+        this.celebrityResponse = DummyData.dummyCelebrityResponse();
     }
 
     @Test
@@ -57,6 +59,21 @@ public class CelebrityControllerTest {
                 .andExpect(jsonPath("$.content[0].picture", is("photo1.png")));
 
         verify(this.celebrityService, times(1)).getAllCelebrities(anyString(), anyString(), anyString(), anyString());
+        verifyNoMoreInteractions(this.celebrityService);
+    }
+
+    @Test
+    public void getCelebrityById_IdGiven_ShouldReturnCelebrityResponse() throws Exception {
+        given(this.celebrityService.getCelebrityById(anyString())).willReturn(this.celebrityResponse);
+
+        mockMvc.perform(get("/api/celebrities/1").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.id", is(1)))
+                .andExpect(jsonPath("$.name", is("Al Pacino")))
+                .andExpect(jsonPath("$.picture", is("photo1.png")));
+
+        verify(this.celebrityService, times(1)).getCelebrityById(anyString());
         verifyNoMoreInteractions(this.celebrityService);
     }
 }

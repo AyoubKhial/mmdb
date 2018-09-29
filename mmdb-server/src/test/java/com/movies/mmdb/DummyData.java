@@ -131,4 +131,8 @@ public final class DummyData {
         return new PagedResponse<>(celebrityResponseList, dummyCelebrityPage().getNumber(), dummyCelebrityPage().getSize(),
                 dummyCelebrityPage().getTotalElements(), dummyCelebrityPage().getTotalPages(), dummyCelebrityPage().isLast());
     }
+
+    public static CelebrityResponse dummyCelebrityResponse() {
+        return DTOModelMapper.mapCelebrityToCelebrityResponse(dummyCelebrity());
+    }
 }

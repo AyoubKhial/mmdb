@@ -7,6 +7,7 @@ import com.movies.mmdb.util.PagedResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import static com.movies.mmdb.util.ApplicationConstants.DEFAULT_PAGE_NUMBER;
@@ -21,6 +22,7 @@ public class CelebrityController {
     public CelebrityController(CelebrityService celebrityService) {
         this.celebrityService = celebrityService;
     }
+
     @GetMapping("/celebrities")
     public ResponseEntity<PagedResponse<CelebrityResponse>> getAllCelebrities(@RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) String page,
                                                                               @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) String size,
@@ -30,4 +32,9 @@ public class CelebrityController {
         return ResponseEntity.ok(celebrityResponsePage);
     }
 
+    @GetMapping("/celebrities/{id}")
+    public ResponseEntity<CelebrityResponse> geCelebrityById(@PathVariable String id) {
+        CelebrityResponse celebrityResponse = this.celebrityService.getCelebrityById(id);
+        return ResponseEntity.ok(celebrityResponse);
+    }
 }

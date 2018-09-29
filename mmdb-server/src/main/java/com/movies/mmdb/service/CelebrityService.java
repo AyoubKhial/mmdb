@@ -6,4 +6,6 @@ import com.movies.mmdb.util.PagedResponse;
 public interface CelebrityService {
 
     PagedResponse<CelebrityResponse> getAllCelebrities(String page, String size, String sort, String direction);
+
+    CelebrityResponse getCelebrityById(String id);
 }
